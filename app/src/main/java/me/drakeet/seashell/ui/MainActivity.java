@@ -45,7 +45,7 @@ import me.drakeet.seashell.R;
 
 public class MainActivity extends BaseListSample implements PullScrollView.OnTurnListener {
 
-    protected static boolean mIsPause = false;
+    public static boolean mIsPause = false;
     //private MenuDrawer mMenuDrawer;
     public static TextView mYesterdayContentTextView;
     public static TextView mTodayContentTextView;
@@ -82,7 +82,7 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
         }
     };
 
-    // 链接activity和service之间的一个桥梁
+    // 链接activity和service
     public ServiceConnection mServiceConnection = new ServiceConnection() {
 
         @Override
@@ -110,6 +110,18 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
         startService(serviceIntent);
         // 绑定service的服务
         bindService(serviceIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mIsPause = true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mIsPause = false;
     }
 
     @Override
@@ -271,7 +283,6 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
         if (reply.readInt() == 200) {
             Toast.makeText(getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     // 键盘按键响应监听，主要监听了munu按键，用于弹出菜单

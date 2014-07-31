@@ -139,7 +139,7 @@ public class NotificatService extends Service {
         mWord = gson.fromJson(mTodayGsonString, Word.class);
         normalRegular();
         try {
-            if (mWord != null) {
+            if (mWord != null && !MainActivity.mIsPause) {
                 Message message = Message.obtain();
                 message.obj = mWord;
                 MainActivity.handler.sendMessage(message);
