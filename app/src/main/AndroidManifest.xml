@@ -43,7 +43,6 @@
         <receiver android:name=".service.BootReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </receiver>
 
