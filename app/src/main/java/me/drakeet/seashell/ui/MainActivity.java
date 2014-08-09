@@ -101,11 +101,8 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.act_pull_down);
-
         initWord();
         initView();
-
         serviceIntent = new Intent(this, NotificatService.class);
         startService(serviceIntent);
         // 绑定service的服务
@@ -133,18 +130,12 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
     }
 
     protected void initView() {
-
-        //mMenuDrawer = MenuDrawer.attach(this, Position.RIGHT);
-
-        //mMenuDrawer.setTouchMode(MenuDrawer.TOUCH_MODE_FULLSCREEN);//全屏可滑动
-        mMenuDrawer.setContentView(R.layout.act_pull_down);
+        mMenuDrawer.setContentView(R.layout.activity_pulldown);
 
         mScrollView = (PullScrollView) findViewById(R.id.scroll_view);
         mHeadImg = (ImageView) findViewById(R.id.background_img);
         mUseTimesTextView = (TextView) findViewById(R.id.use_times);
         mUseTimesTextView.setText(mTimesSting);
-        //mMainLayout = (TableLayout) findViewById(R.id.table_layout);
-
         mScrollView.setOnTurnListener(this);
 
         mScrollView.init(mHeadImg);
@@ -253,14 +244,7 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             ((ViewPager) container).removeView(mViewList.get(position));
-
         }
-    }
-
-    public void showTable() {
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams
-                .MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
-        layoutParams.gravity = Gravity.CENTER;
     }
 
     @Override
@@ -294,7 +278,6 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
             return true;
         }
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            // Toast.makeText(getApplicationContext(), "back", 0).show();
             mMenuDrawer.toggleMenu();
             ExitDoubleClick.getInstance(this).doDoubleClick(1500, "再按一次返回键退出");
             return true;
@@ -343,5 +326,4 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
     protected Position getDrawerPosition() {
         return Position.END;
     }
-
 }

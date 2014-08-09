@@ -19,10 +19,6 @@ import me.drakeet.seashell.widget.PullScrollView;
  */
 public class SplashActivity extends Activity {
 
-    /**
-     * Called when the activity is first created.
-     */
-
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -34,9 +30,6 @@ public class SplashActivity extends Activity {
         DisplayMetrics metric = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metric);
         PullScrollView.mWidth = (int) (metric.widthPixels / 2); // 获取屏幕宽度（像素）
-
-//        Intent intent_updata = new Intent(SplashActivity.this, PulldownViewActivity.class);
-//        startService(intent_updata);
 
         //Display the current version number
         PackageManager pm = getPackageManager();
@@ -51,15 +44,10 @@ public class SplashActivity extends Activity {
 
         new Handler().postDelayed(new Runnable() {
             public void run() {
-                /* Create an Intent that will start the Main WordPress Activity. */
                 Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
                 SplashActivity.this.startActivity(mainIntent);
                 SplashActivity.this.finish();
-
             }
         }, 1900); //1900 for release
-
     }
-
-
 }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@color/white"
     >
-<!--android:background="@color/white" -->
+    <!--android:background="@color/white" -->
     <ImageView
         android:id="@+id/background_img"
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
         android:contentDescription="@null"
 
         android:scaleType="fitXY"
-        android:src="@drawable/page_cover_car_background" />
+        android:src="@drawable/page_cover_car_background"/>
 
     <me.drakeet.seashell.widget.PullScrollView
         android:id="@+id/scroll_view"
@@ -75,7 +75,7 @@
                         android:ellipsize="end"
                         android:text="@string/user_post"
                         android:textSize="12sp"
-                        android:textColor="#A1A1A1" />
+                        android:textColor="#A1A1A1"/>
 
                     <TextView
                         android:id="@+id/user_book"
@@ -88,7 +88,7 @@
                         android:ellipsize="end"
                         android:text="@string/user_book"
                         android:textSize="12sp"
-                        android:textColor="#A1A1A1" />
+                        android:textColor="#A1A1A1"/>
                 </RelativeLayout>
 
                 <ImageView
@@ -99,7 +99,7 @@
                     android:background="@android:color/white"
                     android:layout_marginLeft="21dp"
                     android:contentDescription="@null"
-                    android:src="@drawable/avt" />
+                    android:src="@drawable/avt"/>
 
                 <TextView
                     android:id="@+id/user_name"
@@ -115,7 +115,7 @@
                     android:shadowRadius="5.0"
                     android:text="@string/user_name"
                     android:textSize="20sp"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"/>
 
                 <FrameLayout
                     android:id="@+id/user_divider_layout"
@@ -131,14 +131,14 @@
                         android:layout_height="1px"
                         android:layout_marginTop="5dp"
                         android:contentDescription="@null"
-                        android:background="#DFDFDF" />
+                        android:background="#DFDFDF"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="29dp"
                         android:contentDescription="@null"
-                        android:src="@drawable/arrow_up" />
+                        android:src="@drawable/arrow_up"/>
                 </FrameLayout>
 
                 <TextView
@@ -154,7 +154,7 @@
                     android:marqueeRepeatLimit="marquee_forever"
                     android:text="@string/user_des"
                     android:textSize="12sp"
-                    android:textColor="#B1B1B1" />
+                    android:textColor="#B1B1B1"/>
 
             </RelativeLayout>
 
@@ -175,7 +175,7 @@
                     android:ellipsize="end"
                     android:text="@string/user_recommend_tip"
                     android:textSize="12sp"
-                    android:textColor="#A1A1A1" />
+                    android:textColor="#A1A1A1"/>
 
                 <android.support.v4.view.ViewPager
                     android:id="@+id/viewpage_main"
@@ -187,6 +187,7 @@
                     android:textColor="#000000"
                     android:background="@drawable/card_whole"
                     >
+
                     <android.support.v4.view.PagerTitleStrip
                         android:id="@+id/pager_title_strip_main"
                         android:layout_width="wrap_content"
@@ -200,16 +201,16 @@
 
                 </android.support.v4.view.ViewPager>
 
-<!--
-                <TableLayout
-                    android:id="@+id/table_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:background="@drawable/card_whole" />
-                    -->
+                <!--
+                                <TableLayout
+                                    android:id="@+id/table_layout"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_marginLeft="8dp"
+                                    android:layout_marginRight="8dp"
+                                    android:background="@drawable/card_whole" />
+                                    -->
             </LinearLayout>
 
 

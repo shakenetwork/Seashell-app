@@ -18,7 +18,7 @@ import me.drakeet.seashell.R;
 public abstract class BaseListSample extends FragmentActivity implements MenuAdapter.MenuListener {
 
     private static final String STATE_ACTIVE_POSITION =
-            "net.simonvt.menudrawer.samples.LeftDrawerSample.activePosition";
+            "me.drakeet.activePosition";
 
     protected MenuDrawer mMenuDrawer;
 
@@ -30,17 +30,14 @@ public abstract class BaseListSample extends FragmentActivity implements MenuAda
     @Override
     protected void onCreate(Bundle inState) {
         super.onCreate(inState);
-
         if (inState != null) {
             mActivePosition = inState.getInt(STATE_ACTIVE_POSITION);
         }
-
-               DisplayMetrics metric = new DisplayMetrics();
+        DisplayMetrics metric = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metric);
         int width = (int) (metric.widthPixels / 10 * 4.62); // 获取屏幕宽度（像素），并且侧滑菜单占6/10比例，接近黄金比例~
 
         mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.BEHIND, getDrawerPosition(), getDragMode());
-
         List<Object> items = new ArrayList<Object>();
         items.add(new Item("注册/登录", R.drawable.avatar));
         items.add(new Category("Cat 1"));
@@ -55,14 +52,11 @@ public abstract class BaseListSample extends FragmentActivity implements MenuAda
         items.add(new Item("退出", R.drawable.menu_exit));
 
         mList = new ListView(this);
-
         mAdapter = new MenuAdapter(this, items);
         mAdapter.setListener(this);
         mAdapter.setActivePosition(mActivePosition);
-
         mList.setAdapter(mAdapter);
         mList.setOnItemClickListener(mItemClickListener);
-
         mMenuDrawer.setMenuView(mList);
         mMenuDrawer.setMenuSize(width);
     }
