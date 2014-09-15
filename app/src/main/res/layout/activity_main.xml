@@ -34,7 +34,7 @@
                 android:id="@+id/scroll_view_head"
                 android:layout_width="match_parent"
                 android:layout_height="112dp"
-                android:layout_marginTop="130dp"
+                android:layout_marginTop="100dp"
                 android:background="@color/transparent"
                 android:orientation="vertical">
 
@@ -86,7 +86,7 @@
                         android:layout_marginTop="4dp"
                         android:singleLine="true"
                         android:ellipsize="end"
-                        android:text="@string/user_book"
+                        android:text="@string/user_look"
                         android:textSize="12sp"
                         android:textColor="#A1A1A1"/>
                 </RelativeLayout>
@@ -173,7 +173,7 @@
                     android:layout_marginTop="7dp"
                     android:singleLine="true"
                     android:ellipsize="end"
-                    android:text="@string/user_recommend_tip"
+                    android:text="@string/app_name"
                     android:textSize="12sp"
                     android:textColor="#A1A1A1"/>
 

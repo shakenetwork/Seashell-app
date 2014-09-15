@@ -24,8 +24,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import me.drakeet.seashell.R;
+import me.drakeet.seashell.ui.BaseActivity;
 
-public class NoBoringActionBarActivity extends Activity {
+public class NoBoringActionBarActivity extends BaseActivity {
 
     private static final String TAG = "NoBoringActionBarActivity";
     private int mActionBarTitleColor;

@@ -10,7 +10,10 @@ import android.widget.TextView;
 
 import me.drakeet.seashell.R;
 
-public class AboutActivity extends Activity {
+/**
+ * Created by drakeet on 9/14/14.
+ */
+public class AboutActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

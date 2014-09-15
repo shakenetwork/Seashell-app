@@ -13,14 +13,12 @@ import android.os.RemoteException;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +40,9 @@ import me.drakeet.seashell.widget.PullScrollView;
 
 import me.drakeet.seashell.R;
 
-
+/**
+ * Created by drakeet on 9/14/14.
+ */
 public class MainActivity extends BaseListSample implements PullScrollView.OnTurnListener {
 
     public static boolean mIsPause = false;
@@ -130,7 +130,7 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
     }
 
     protected void initView() {
-        mMenuDrawer.setContentView(R.layout.activity_pulldown);
+        mMenuDrawer.setContentView(R.layout.activity_main);
 
         mScrollView = (PullScrollView) findViewById(R.id.scroll_view);
         mHeadImg = (ImageView) findViewById(R.id.background_img);
