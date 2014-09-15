@@ -1,21 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:gravity="center"
-              android:orientation="vertical"
-              android:padding="16dp">
+<!--
+json example:
+        {"word":"prospect ",
+        "phonetic":"[ˈprɒspekt]","speech":"v. & n. ",
+        "explanation":"展望；前景 ",
+        "example":"eg. She's a good prospect for the national team.\n她是国家队的未来。\n\nP.S 小艾最近有些忙，抱歉且非常感谢支持，开学后会第一时间完善功能！^ ^ "}
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_gravity="center_vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp">
 
-    <TextView
-        android:id="@+id/contentText"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_marginLeft="3dp"
-        android:text="Loading..."
-        android:textSize="19sp"
-        android:autoLink="web"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-        android:textColor="#c9000000"/>
+            <TextView
+                android:id="@+id/content_word"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="word"
+                android:textColor="#c9000000"
+                android:textSize="28sp"
+                android:textStyle="bold"/>
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/content_phonetic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:text="phonetic"
+                android:textColor="#c9000000"
+                android:textSize="19sp"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/content_speech"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="speech"
+                android:textColor="#c9000000"
+                android:textSize="19sp"/>
+
+            <TextView
+                android:id="@+id/content_explanation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:text="explanation"
+                android:textColor="#c9000000"
+                android:textSize="19sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/content_example"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:text="example"
+                android:textColor="#c9000000"
+                android:textSize="19sp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</FrameLayout>

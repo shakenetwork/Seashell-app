@@ -12,7 +12,6 @@ import me.drakeet.seashell.utils.MySharedpreference;
 import me.drakeet.seashell.R;
 import me.drakeet.seashell.model.Word;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -28,6 +27,7 @@ import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
+import android.widget.Toast;
 
 
 public class NotificatService extends Service {
@@ -62,7 +62,7 @@ public class NotificatService extends Service {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        startN();
+                        startNotification();
                     }
                 }).start();
                 reply.writeInt(200);
@@ -83,14 +83,14 @@ public class NotificatService extends Service {
                 while (stopRequested == false) {
                     if (isFirst2) {
                         firstTime = date.getDate();
-                        startN();
+                        startNotification();
                         isFirst2 = false;
                     }
                     date = new Date();
                     int currentTime = date.getDate();
                     System.out.println("currentTime:" + currentTime);
                     if (currentTime != firstTime) {
-                        startN();
+                        startNotification();
                         firstTime = currentTime;
                     }
 
@@ -121,7 +121,7 @@ public class NotificatService extends Service {
         sharedpreference.saveTodayJson(mTodayGsonString);
     }
 
-    public void startN() {
+    public void startNotification() {
         HttpDownloader httpDownloader = new HttpDownloader();
         mTodayGsonString = httpDownloader
                 .download("http://test.drakeet.me/?key=seashell2");
@@ -142,7 +142,8 @@ public class NotificatService extends Service {
             if (mWord != null && !MainActivity.mIsPause) {
                 Message message = Message.obtain();
                 message.obj = mWord;
-                MainActivity.handler.sendMessage(message);
+                Toast.makeText(getApplicationContext(), "startNotification TODO", Toast.LENGTH_SHORT).show();
+                //MainActivity.handler.sendMessage(message);
             }
         } catch (Exception e) {
             e.printStackTrace();

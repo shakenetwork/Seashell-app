@@ -47,14 +47,14 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
 
     public static boolean mIsPause = false;
     //private MenuDrawer mMenuDrawer;
-    public static TextView mYesterdayContentTextView;
-    public static TextView mTodayContentTextView;
     private TextView mYerterdayTitleTextView;
     private TextView mUseTimesTextView;
     private int MENU_SETTING;
     private Intent serviceIntent;
     public static Word mTodayWord;
     private static Word mYesterdayWord;
+    private WordViewHoder mYesterdayWordViewHoder;
+    private WordViewHoder mTodayWordViewHoder;
     private PullScrollView mScrollView;
     private ImageView mHeadImg;
     private TableLayout mMainLayout;
@@ -69,15 +69,13 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
     private NotificatService.LocalBinder mLocalBinder;
     private NotificatService mNotificatService;
 
-    public static Handler handler = new Handler() {
+    public Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             mTodayWord = (Word) msg.obj;
             if (mTodayWord != null) {
-                mTodayContentTextView.setText(mTodayWord.getWord()
-                        + "  " + mTodayWord.getPhonetic() + "\n"
-                        + mTodayWord.getSpeech() + "\n" + mTodayWord.getExplanation()
-                        + "\n" + mTodayWord.getExample());
+                //start math
+                setWordViewContent(mTodayWordViewHoder, mTodayWord);
             }
         }
     };
@@ -131,15 +129,12 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
 
     protected void initView() {
         mMenuDrawer.setContentView(R.layout.activity_main);
-
         mScrollView = (PullScrollView) findViewById(R.id.scroll_view);
         mHeadImg = (ImageView) findViewById(R.id.background_img);
         mUseTimesTextView = (TextView) findViewById(R.id.use_times);
         mUseTimesTextView.setText(mTimesSting);
         mScrollView.setOnTurnListener(this);
-
         mScrollView.init(mHeadImg);
-
         mMainViewPager = (ViewPager) findViewById(R.id.viewpage_main);
         mPagerTitleStrip = (PagerTitleStrip) findViewById(R.id.pager_title_strip_main);
 
@@ -155,8 +150,8 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
         mMainViewPager.setAdapter(new MainViewPagerAdapter());
         mMainViewPager.setCurrentItem(1);
 
-        mYesterdayContentTextView = (TextView) viewYesterday.findViewById(R.id.contentText);
-        mTodayContentTextView = (TextView) viewToday.findViewById(R.id.contentText);
+        mYesterdayWordViewHoder = getView(viewYesterday);
+        mTodayWordViewHoder = getView(viewToday);
 
         mMainViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -176,15 +171,9 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
             public void onPageScrollStateChanged(int i) {
                 initWord();
                 if (position == 0 && mYesterdayWord != null) {
-                    mYesterdayContentTextView.setText(mYesterdayWord.getWord()
-                            + "  " + mYesterdayWord.getPhonetic() + "\n"
-                            + mYesterdayWord.getSpeech() + "\n" + mYesterdayWord.getExplanation()
-                            + "\n" + mYesterdayWord.getExample());
+                    setWordViewContent(mYesterdayWordViewHoder, mYesterdayWord);
                 } else if (position == 1 && mTodayWord != null) {
-                    mTodayContentTextView.setText(mTodayWord.getWord()
-                            + "  " + mTodayWord.getPhonetic() + "\n"
-                            + mTodayWord.getSpeech() + "\n" + mTodayWord.getExplanation()
-                            + "\n" + mTodayWord.getExample());
+                    setWordViewContent(mTodayWordViewHoder, mTodayWord);
                 }
             }
         });
@@ -192,11 +181,26 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
         mMainViewPager.requestFocus();
         mMainViewPager.setFocusableInTouchMode(true);
         if (mTodayWord != null) {
-            mTodayContentTextView.setText(mTodayWord.getWord()
-                    + "  " + mTodayWord.getPhonetic() + "\n"
-                    + mTodayWord.getSpeech() + "\n" + mTodayWord.getExplanation()
-                    + "\n" + mTodayWord.getExample());
+            setWordViewContent(mTodayWordViewHoder, mTodayWord);
         }
+    }
+
+    private void setWordViewContent(WordViewHoder wordViewHoder, Word word) {
+        wordViewHoder.wordTextView.setText(word.getWord());
+        wordViewHoder.phoneticTextView.setText(word.getPhonetic());
+        wordViewHoder.speechTextView.setText(word.getSpeech());
+        wordViewHoder.explanationTextView.setText(word.getExplanation());
+        wordViewHoder.exampleTextView.setText(word.getExample());
+    }
+
+    private WordViewHoder getView(View view) {
+        WordViewHoder wordViewHoder = new WordViewHoder();
+        wordViewHoder.wordTextView = (TextView) view.findViewById(R.id.content_word);
+        wordViewHoder.phoneticTextView = (TextView) view.findViewById(R.id.content_phonetic);
+        wordViewHoder.speechTextView = (TextView) view.findViewById(R.id.content_speech);
+        wordViewHoder.explanationTextView = (TextView) view.findViewById(R.id.content_explanation);
+        wordViewHoder.exampleTextView = (TextView) view.findViewById(R.id.content_example);
+        return wordViewHoder;
     }
 
     //更新单词数据
@@ -325,5 +329,14 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
     @Override
     protected Position getDrawerPosition() {
         return Position.END;
+    }
+
+    class WordViewHoder {
+
+        TextView wordTextView;
+        TextView phoneticTextView;
+        TextView speechTextView;
+        TextView explanationTextView;
+        TextView exampleTextView;
     }
 }
