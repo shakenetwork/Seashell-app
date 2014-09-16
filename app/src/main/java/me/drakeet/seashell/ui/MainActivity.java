@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +47,7 @@ import me.drakeet.seashell.R;
 public class MainActivity extends BaseListSample implements PullScrollView.OnTurnListener {
 
     public static boolean mIsPause = false;
+    public static final int YESTERDAY = 0, TODAY = 1;
     //private MenuDrawer mMenuDrawer;
     private TextView mYerterdayTitleTextView;
     private TextView mUseTimesTextView;
@@ -60,6 +62,8 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
     private TableLayout mMainLayout;
     private ViewPager mMainViewPager;
     private PagerTitleStrip mPagerTitleStrip;
+    private ProgressBar mYesterdayProgressBar;
+    private ProgressBar mTodayProgressBar;
 
     private List<View> mViewList;
     private List<String> mTitleList;
@@ -138,8 +142,12 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
         mMainViewPager = (ViewPager) findViewById(R.id.viewpage_main);
         mPagerTitleStrip = (PagerTitleStrip) findViewById(R.id.pager_title_strip_main);
 
-        View viewYesterday = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_main, null);
-        View viewToday = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_main, null);
+
+        final View viewYesterday = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_main, null);
+        final View viewToday = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_main, null);
+
+        mYesterdayProgressBar = (ProgressBar) viewYesterday.findViewById(R.id.content_progressbar);
+        mTodayProgressBar = (ProgressBar) viewToday.findViewById(R.id.content_progressbar);
 
         mViewList = new ArrayList<View>();
         mViewList.add(viewYesterday);
@@ -152,6 +160,8 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
 
         mYesterdayWordViewHoder = getView(viewYesterday);
         mTodayWordViewHoder = getView(viewToday);
+        mYesterdayWordViewHoder.setId(YESTERDAY);
+        mTodayWordViewHoder.setId(TODAY);
 
         mMainViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -191,6 +201,10 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
         wordViewHoder.speechTextView.setText(word.getSpeech());
         wordViewHoder.explanationTextView.setText(word.getExplanation());
         wordViewHoder.exampleTextView.setText(word.getExample());
+        if (wordViewHoder.getId() == YESTERDAY)
+            mYesterdayProgressBar.setVisibility(View.GONE);
+        else
+            mTodayProgressBar.setVisibility(View.GONE);
     }
 
     private WordViewHoder getView(View view) {
@@ -332,11 +346,19 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
     }
 
     class WordViewHoder {
-
+        int id;
         TextView wordTextView;
         TextView phoneticTextView;
         TextView speechTextView;
         TextView explanationTextView;
         TextView exampleTextView;
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
     }
 }

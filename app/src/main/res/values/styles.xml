@@ -1,8 +1,8 @@
 <resources>
 
-    <style name="MenuDrawer" />
+    <style name="MenuDrawer"/>
 
-    <style name="MenuDrawer.Widget" />
+    <style name="MenuDrawer.Widget"/>
 
     <style name="MenuDrawer.Widget.Category">
         <item name="android:textStyle">bold</item>
@@ -31,7 +31,7 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
-     <style name="MenuDrawerStyle" parent="Widget.MenuDrawer">
+    <style name="MenuDrawerStyle" parent="Widget.MenuDrawer">
         <item name="mdActiveIndicator">@drawable/menu_arrow_end</item>
         <item name="mdMenuSize">150dp</item>
     </style>
@@ -45,8 +45,6 @@
         <item name="mdActiveIndicator">@drawable/menu_arrow_end</item>
         <item name="mdMenuSize">150dp</item>
     </style>
-
-
 
     <style name="TransparentTheme" parent="@android:style/Theme.Holo.Light">
         <item name="android:windowBackground">@null</item>

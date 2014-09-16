@@ -27,7 +27,6 @@ json example:
                 android:id="@+id/content_word"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="word"
                 android:textColor="#c9000000"
                 android:textSize="28sp"
                 android:textStyle="bold"/>
@@ -37,7 +36,6 @@ json example:
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:text="phonetic"
                 android:textColor="#c9000000"
                 android:textSize="19sp"
                 />
@@ -51,7 +49,6 @@ json example:
                 android:id="@+id/content_speech"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="speech"
                 android:textColor="#c9000000"
                 android:textSize="19sp"/>
 
@@ -60,7 +57,6 @@ json example:
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
-                android:text="explanation"
                 android:textColor="#c9000000"
                 android:textSize="19sp"/>
         </LinearLayout>
@@ -74,10 +70,16 @@ json example:
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:autoLink="web"
-                android:text="example"
-                android:textColor="#c9000000"
+                android:textColor="#B1B1B1"
                 android:textSize="19sp"/>
         </LinearLayout>
 
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/content_progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        />
 </FrameLayout>
