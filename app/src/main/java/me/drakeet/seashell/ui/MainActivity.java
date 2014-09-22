@@ -48,10 +48,7 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
 
     public static boolean mIsPause = false;
     public static final int YESTERDAY = 0, TODAY = 1;
-    //private MenuDrawer mMenuDrawer;
-    private TextView mYerterdayTitleTextView;
     private TextView mUseTimesTextView;
-    private int MENU_SETTING;
     private Intent serviceIntent;
     public static Word mTodayWord;
     private static Word mYesterdayWord;
@@ -73,12 +70,11 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
     private NotificatService.LocalBinder mLocalBinder;
     private NotificatService mNotificatService;
 
-    public Handler handler = new Handler() {
+    public Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             mTodayWord = (Word) msg.obj;
             if (mTodayWord != null) {
-                //start math
                 setWordViewContent(mTodayWordViewHoder, mTodayWord);
             }
         }
@@ -107,7 +103,6 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
         initView();
         serviceIntent = new Intent(this, NotificatService.class);
         startService(serviceIntent);
-        // 绑定service的服务
         bindService(serviceIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
@@ -141,7 +136,6 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
         mScrollView.init(mHeadImg);
         mMainViewPager = (ViewPager) findViewById(R.id.viewpage_main);
         mPagerTitleStrip = (PagerTitleStrip) findViewById(R.id.pager_title_strip_main);
-
 
         final View viewYesterday = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_main, null);
         final View viewToday = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_main, null);
@@ -273,6 +267,7 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
     public void onRefreshClick(View view) {
 
         // 往Service中传递值的对象，到Service中去处理
+        mTodayProgressBar.setVisibility(View.VISIBLE);
         Parcel data = Parcel.obtain();
         data.writeInt(199);
         Parcel reply = Parcel.obtain();
@@ -282,8 +277,12 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+
         if (reply.readInt() == 200) {
-            Toast.makeText(getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
+            Message message = Message.obtain();
+            message.obj = mTodayWord;
+            mHandler.sendMessage(message);
+            mTodayProgressBar.setVisibility(View.GONE);
         }
     }
 
@@ -331,7 +330,7 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
             i.addCategory(Intent.CATEGORY_HOME);
             startActivity(i);
         } else {
-            Toast.makeText(getApplicationContext(), item.mTitle + "暂未完成开发...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), item.mTitle + " 敬请期待^ ^", Toast.LENGTH_SHORT).show();
         }
     }
 

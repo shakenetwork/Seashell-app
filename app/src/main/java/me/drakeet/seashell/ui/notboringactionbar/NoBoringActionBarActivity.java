@@ -21,11 +21,18 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.litepal.crud.DataSupport;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import me.drakeet.seashell.R;
+import me.drakeet.seashell.model.Word;
 import me.drakeet.seashell.ui.BaseActivity;
 
+/**
+ * Changed by drakeet on 9/18/2014.
+ */
 public class NoBoringActionBarActivity extends BaseActivity {
 
     private static final String TAG = "NoBoringActionBarActivity";
@@ -74,24 +81,16 @@ public class NoBoringActionBarActivity extends BaseActivity {
     }
 
     private void setupListView() {
-        ArrayList<String> FAKES = new ArrayList<String>();
-        FAKES.add("seashell n.贝壳");
-        FAKES.add("phenomena n.现象（phenomenon的复数形式）");
-        FAKES.add("curve n.曲线");
-        FAKES.add("terminal n.终端;终点站;候机楼;码头;(adj.)晚期的");
-        FAKES.add("solitary adj.独立的；隐居的；(n.)独居者；单独监禁");
-        FAKES.add("seashell n.贝壳");
-        FAKES.add("phenomena n.现象（phenomenon的复数形式）");
-        FAKES.add("curve n.曲线");
-        FAKES.add("terminal n.终端;终点站;候机楼;码头;(adj.)晚期的");
-        FAKES.add("solitary adj.独立的；隐居的；(n.)独居者；单独监禁");
-
-        for (int i = 0; i < 10; i++) {
-            FAKES.add(" ");
+        List<Word> wordList = DataSupport.findAll(Word.class);
+        ArrayList<String> tData = new ArrayList<String>();
+        ArrayList<String> data = new ArrayList<String>();
+        for (Word word : wordList) {
+            tData.add(word.getWord() + " " + word.getSpeech() + " " + word.getExplanation());
         }
+
         mPlaceHolderView = getLayoutInflater().inflate(R.layout.view_header_placeholder, mListView, false);
         mListView.addHeaderView(mPlaceHolderView);
-        mListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, FAKES));
+        mListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, tData));
         mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {

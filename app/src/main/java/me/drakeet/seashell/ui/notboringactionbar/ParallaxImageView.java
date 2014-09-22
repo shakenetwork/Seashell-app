@@ -33,7 +33,7 @@ public class ParallaxImageView extends ImageView {
     @Override
     public void draw(Canvas canvas) {
         canvas.save();
-        canvas.translate(0, -mCurrentTranslation / 2)  ;
+        canvas.translate(0, -mCurrentTranslation / 2);
         super.draw(canvas);
         canvas.restore();
     }

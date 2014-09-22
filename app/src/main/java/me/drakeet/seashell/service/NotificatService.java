@@ -11,6 +11,7 @@ import me.drakeet.seashell.utils.HttpDownloader;
 import me.drakeet.seashell.utils.MySharedpreference;
 import me.drakeet.seashell.R;
 import me.drakeet.seashell.model.Word;
+import me.drakeet.seashell.utils.TaskUtils;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -18,7 +19,9 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Parcel;
@@ -29,7 +32,9 @@ import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.widget.Toast;
 
-
+/**
+ * Changed by drakeet on 9/18/2014.
+ */
 public class NotificatService extends Service {
 
     private Word mWord;
@@ -38,11 +43,19 @@ public class NotificatService extends Service {
     static long firstTime;
     Thread thread;
     private volatile boolean stopRequested;
-    boolean isFirst2 = true;
-    private int NOTIFY_ID = 524947901;
+    boolean isFirstTime = true;
+    private int NOTIFY_ID = 524947901;// this id show be a unique integer.
     private String mTodayGsonString;
     private String mYesterdayGsonString;
     private LocalBinder localBinder = new LocalBinder();
+    private boolean isRefresh;
+
+    public Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+        }
+    };
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -55,17 +68,24 @@ public class NotificatService extends Service {
         }
 
         @Override
-        protected boolean onTransact(int code, Parcel data, Parcel reply,
+        protected boolean onTransact(int code, Parcel data, final Parcel reply,
                                      int flags) throws RemoteException {
             //表示从activity中获取数值
             if (data.readInt() == 199) {
-                new Thread(new Runnable() {
+                TaskUtils.executeAsyncTask(new AsyncTask<Object, Object, Object>() {
                     @Override
-                    public void run() {
+                    protected Object doInBackground(Object... params) {
                         startNotification();
+                        return null;
                     }
-                }).start();
-                reply.writeInt(200);
+
+                    @Override
+                    protected void onPreExecute() {
+                        super.onPreExecute();
+                        Toast.makeText(getApplicationContext(), "更新完成", Toast.LENGTH_SHORT).show();
+                        reply.writeInt(200);
+                    }
+                });
             }
             return super.onTransact(code, data, reply, flags);
         }
@@ -81,10 +101,10 @@ public class NotificatService extends Service {
                 Date date = new Date();
 
                 while (stopRequested == false) {
-                    if (isFirst2) {
+                    if (isFirstTime) {
                         firstTime = date.getDate();
                         startNotification();
-                        isFirst2 = false;
+                        isFirstTime = false;
                     }
                     date = new Date();
                     int currentTime = date.getDate();
@@ -95,7 +115,7 @@ public class NotificatService extends Service {
                     }
 
                     try {
-                        Log.i("Seashell-->", "runing");
+                        Log.i("Seashell-->", "onStartCommand is runing");
                         Thread.sleep(120 * 1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -116,6 +136,8 @@ public class NotificatService extends Service {
         if (((String) map.get("today_json")).equals(mTodayGsonString)) {
             return;
         }
+        if (mWord != null)
+            mWord.save();// save the new word to wordlist.db
         mYesterdayGsonString = (String) map.get("today_json");
         sharedpreference.saveYesterdayJson(mYesterdayGsonString);
         sharedpreference.saveTodayJson(mTodayGsonString);
@@ -137,16 +159,10 @@ public class NotificatService extends Service {
         mWord = new Word();
         Gson gson = new Gson();
         mWord = gson.fromJson(mTodayGsonString, Word.class);
-        normalRegular();
-        try {
-            if (mWord != null && !MainActivity.mIsPause) {
-                Message message = Message.obtain();
-                message.obj = mWord;
-                Toast.makeText(getApplicationContext(), "startNotification TODO", Toast.LENGTH_SHORT).show();
-                //MainActivity.handler.sendMessage(message);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        showWordInNotificationBar();
+
+        if (mWord != null) {
+            //...
         }
 
         Context context = getApplicationContext();
@@ -157,10 +173,12 @@ public class NotificatService extends Service {
         sharedpreference.saveHonor(honor);
         changeNewAndOldWord();
         sharedpreference.saveTodayJson(mTodayGsonString);
-        MainActivity.mTodayWord = mWord;
+
+        if (MainActivity.mTodayWord != null)
+            MainActivity.mTodayWord = mWord;
     }
 
-    private void normalRegular() {
+    private void showWordInNotificationBar() {
 
         Random random = new Random();
         int i = random.nextInt((int) SystemClock.uptimeMillis());

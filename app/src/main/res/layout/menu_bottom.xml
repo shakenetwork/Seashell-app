@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="10dp" >
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:padding="10dp">
 
     <TextView
         android:id="@+id/item1"
@@ -14,7 +14,7 @@
         android:drawableLeft="@drawable/ic_action_refresh_dark"
         android:onClick="onDrawerItemClick"
         android:tag="Yesterday"
-        android:text="Yesterday" />
+        android:text="Yesterday"/>
 
     <TextView
         android:id="@+id/item2"
@@ -25,6 +25,6 @@
         android:drawableLeft="@drawable/ic_action_select_all_dark"
         android:onClick="onDrawerItemClick"
         android:tag="Today"
-        android:text="Today" />
+        android:text="Today"/>
 
 </LinearLayout>

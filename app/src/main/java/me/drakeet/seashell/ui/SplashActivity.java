@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import android.widget.TextView;
+
+import org.litepal.tablemanager.Connector;
 
 import me.drakeet.seashell.R;
 import me.drakeet.seashell.widget.PullScrollView;
@@ -21,6 +24,7 @@ public class SplashActivity extends Activity {
 
     @Override
     public void onCreate(Bundle icicle) {
+        SQLiteDatabase db = Connector.getDatabase();
         super.onCreate(icicle);
         getWindow().setFormat(PixelFormat.RGBA_8888);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);

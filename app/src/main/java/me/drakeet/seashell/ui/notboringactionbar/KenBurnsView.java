@@ -40,7 +40,7 @@ public class KenBurnsView extends FrameLayout {
         @Override
         public void run() {
             swapImage();
-            mHandler.postDelayed(mSwapImageRunnable, mSwapMs - mFadeInOutMs*2);
+            mHandler.postDelayed(mSwapImageRunnable, mSwapMs - mFadeInOutMs * 2);
         }
     };
 
@@ -64,7 +64,7 @@ public class KenBurnsView extends FrameLayout {
 
     private void swapImage() {
         Log.d(TAG, "swapImage active=" + mActiveImageIndex);
-        if(mActiveImageIndex == -1) {
+        if (mActiveImageIndex == -1) {
             mActiveImageIndex = 1;
             animate(mImageViews[mActiveImageIndex]);
             return;

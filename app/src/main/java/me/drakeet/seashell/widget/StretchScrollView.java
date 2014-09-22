@@ -17,9 +17,13 @@ import android.widget.ScrollView;
 public class StretchScrollView extends ScrollView {
     private static final int MSG_REST_POSITION = 0x01;
 
-    /** The max scroll height. */
+    /**
+     * The max scroll height.
+     */
     private static final int MAX_SCROLL_HEIGHT = 400;
-    /** Damping, the smaller the greater the resistance */
+    /**
+     * Damping, the smaller the greater the resistance
+     */
     private static final float SCROLL_RATIO = 0.4f;
 
     private View mChildRootView;

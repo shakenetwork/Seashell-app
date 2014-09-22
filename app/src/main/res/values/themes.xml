@@ -1,7 +1,7 @@
 <resources>
 
     <style name="SampleBase" parent="android:Theme.Holo">
-    <!--<item name="android:background">@drawable/title_image</item>-->
+        <!--<item name="android:background">@drawable/title_image</item>-->
     </style>
 
     <style name="SampleTheme" parent="SampleBase">
