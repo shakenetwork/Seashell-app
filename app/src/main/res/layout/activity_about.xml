@@ -110,6 +110,17 @@
             android:autoLink="web"
             android:lineSpacingMultiplier="1.4"
             android:text="@string/my_blog"/>
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:lineSpacingMultiplier="1.4"
+            android:text="@string/about_declaration"
+            android:layout_below="@+id/textView3"
+            android:layout_alignLeft="@+id/textView3"
+            android:layout_alignStart="@+id/textView3"/>
     </RelativeLayout>
 
 </RelativeLayout>

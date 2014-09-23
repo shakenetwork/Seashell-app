@@ -1,4 +1,5 @@
-前言：
+
+## 前言
 这个app是我在大二下学期考试期间背单词的时候突发奇想并且花费了大概4天的时间做出来的，所以有很多地方可能写得不好，或者很多功能点没有写完，考虑到目前还有另外一些项目特别忙，于是将这个项目开源，特别欢迎和希望能够有人和我一起来有空完善它，前提是你喜欢它~，喜欢才能把一件事做好嘛:)
 
 以下内容来源于我的博客：http://drakeet.me/seashell-app
@@ -15,14 +16,14 @@
 
 http://drakeet.me/seashell.apk (非最新版，最新版还是去应用商店下载吧)
 
-App store:
+## App store:
 
 小米：http://app.mi.com/detail/65475
 360：http://zhushou.360.cn/detail/index/soft_id/1814521
 
 我的博客：http://drakeet.me
 
-截图:
+## 截图
 
 ![截图](/screenshots/s1.png)
 ![截图](/screenshots/s2.png)
@@ -30,6 +31,14 @@ App store:
 ![截图](/screenshots/s4.png)
 ![截图](/screenshots/s5.png)
 ![截图](/screenshots/s6.png)
+
+## 未修复BUG
+目前1.3.0版本已知的明显问题是：开机自启动后不能正常联网更新
+
+## 用到的开源库
+* LitePalFramework / LitePal
+* MarkMjw / PullScrollView
+* flavienlaurent / NotBoringActionBar
 
 License
 ============
