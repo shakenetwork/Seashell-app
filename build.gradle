@@ -12,6 +12,8 @@ buildscript {
     }
 }
 
+ext.compileSdkVersion = 20
+ext.buildToolsVersion = "20.0.0"
 
 allprojects {
     repositories {

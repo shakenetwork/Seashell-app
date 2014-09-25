@@ -39,7 +39,9 @@
 * SimonVT / android-menudrawer : 侧滑菜单
 * LitePalFramework / LitePal : 数据库 ORM
 * MarkMjw / PullScrollView : UI 框架
-* flavienlaurent / NotBoringActionBar : 已背单词页面1
+* flavienlaurent / NotBoringActionBar : 已背单词页面
+* msdx / androidkit : 目前只用于双击退出
+* Google / Gson
 
 （我会再找时间梳理一下代码，并且在`README.md`中写明代码结构和各项逻辑关系^ ^）
 

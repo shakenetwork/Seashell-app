@@ -52,6 +52,6 @@ public class SplashActivity extends Activity {
                 SplashActivity.this.startActivity(mainIntent);
                 SplashActivity.this.finish();
             }
-        }, 1900); //1900 for release
+        }, 1000); //1900 for release
     }
 }

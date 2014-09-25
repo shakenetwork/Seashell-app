@@ -20,5 +20,6 @@
     <string name="my_email">联系：drakeet.me@gmail.com</string>
     <string name="my_name">作者：drakeet</string>
     <string name="about_declaration">\n声明：贝壳单词使用的应用图标资源来自网络，\n\t\t\t\t 感谢原作者！若涉及侵权请联系我删除。</string>
+    <string name="double_click_exit">再按一次返回键退出</string>
 
 </resources>

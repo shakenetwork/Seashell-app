@@ -72,17 +72,9 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
     private NotificatService.LocalBinder mLocalBinder;
     private NotificatService mNotificatService;
 
-    public Handler mUpdateTodayWordHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            mTodayWord = (Word) msg.obj;
-            if (mTodayWord != null) {
-                setWordViewContent(mTodayWordViewHoder, mTodayWord);
-            }
-        }
-    };
+    public static Handler mUpdateTodayWordHandler;
 
-    // 链接activity和service
+    // bind activity and service
     public ServiceConnection mServiceConnection = new ServiceConnection() {
 
         @Override
@@ -103,6 +95,15 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
         super.onCreate(savedInstanceState);
         initWord();
         initView();
+        mUpdateTodayWordHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                mTodayWord = (Word) msg.obj;
+                if (mTodayWord != null) {
+                    setWordViewContent(mTodayWordViewHoder, mTodayWord);
+                }
+            }
+        };
         serviceIntent = new Intent(this, NotificatService.class);
         startService(serviceIntent);
         bindService(serviceIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
@@ -129,7 +130,7 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
     }
 
     /**
-     * 初始化 View，和 ViewHoder
+     * init View and ViewHoder
      */
     protected void initView() {
         mMenuDrawer.setContentView(R.layout.activity_main);
@@ -227,7 +228,9 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
         return wordViewHoder;
     }
 
-    //更新单词数据
+    /**
+     * init the word data from sharedpreference
+     */
     private void initWord() {
         Map<String, String> map;
         Gson gson = new Gson();
@@ -281,7 +284,7 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
     }
 
     /**
-     * on refesh button press.
+     * on refesh button click.
      * @param view
      */
     public void onRefreshClick(View view) {
@@ -305,7 +308,6 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
         }
     }
 
-    // 键盘按键响应监听，主要监听了munu按键，用于弹出菜单
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
@@ -315,11 +317,10 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
         }
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             mMenuDrawer.toggleMenu();
-            ExitDoubleClick.getInstance(this).doDoubleClick(1500, "再按一次返回键退出");
+            ExitDoubleClick.getInstance(this).doDoubleClick(1500, getString(R.string.double_click_exit));
             return true;
         }
-        return super.onKeyDown(keyCode, event); // 最后，一定要做完以后返回
-        // true，或者在弹出菜单后返回true，其他键返回super，让其他键默认
+        return super.onKeyDown(keyCode, event);
     }
 
     /**

@@ -154,7 +154,9 @@ public class NotificatService extends Service {
         showWordInNotificationBar();
 
         if (mWord != null) {
-            //...
+            Message message = Message.obtain();
+            message.obj = mWord;
+            MainActivity.mUpdateTodayWordHandler.sendMessage(message);
         }
 
         Context context = getApplicationContext();
