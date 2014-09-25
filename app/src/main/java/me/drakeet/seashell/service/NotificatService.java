@@ -44,18 +44,10 @@ public class NotificatService extends Service {
     Thread thread;
     private volatile boolean stopRequested;
     boolean isFirstTime = true;
-    private int NOTIFY_ID = 524947901;// this id show be a unique integer.
     private String mTodayGsonString;
     private String mYesterdayGsonString;
     private LocalBinder localBinder = new LocalBinder();
-    private boolean isRefresh;
-
-    public Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-        }
-    };
+    public static boolean hasNewWord = true;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -108,7 +100,6 @@ public class NotificatService extends Service {
                     }
                     date = new Date();
                     int currentTime = date.getDate();
-                    System.out.println("currentTime:" + currentTime);
                     if (currentTime != firstTime) {
                         startNotification();
                         firstTime = currentTime;
@@ -129,18 +120,19 @@ public class NotificatService extends Service {
     }
 
     public void changeNewAndOldWord() {
-
         Context context = getApplicationContext();
         MySharedpreference sharedpreference = new MySharedpreference(context);
         Map map = sharedpreference.getWordJson();
+        // 如果和最新的单词是一样的，就取消更新
         if (((String) map.get("today_json")).equals(mTodayGsonString)) {
             return;
         }
         if (mWord != null)
             mWord.save();// save the new word to wordlist.db
-        mYesterdayGsonString = (String) map.get("today_json");
+        mYesterdayGsonString = (String) map.get("today_json"); // 将今天的存至昨天的
         sharedpreference.saveYesterdayJson(mYesterdayGsonString);
         sharedpreference.saveTodayJson(mTodayGsonString);
+        hasNewWord = true;
     }
 
     public void startNotification() {
@@ -149,7 +141,7 @@ public class NotificatService extends Service {
                 .download("http://test.drakeet.me/?key=seashell2");
         if (mTodayGsonString == null || mTodayGsonString.isEmpty()) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(10 * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -171,7 +163,7 @@ public class NotificatService extends Service {
         int honor = (Integer) map.get("honor");
         honor++;
         sharedpreference.saveHonor(honor);
-        changeNewAndOldWord();
+        changeNewAndOldWord();// 更换单词
         sharedpreference.saveTodayJson(mTodayGsonString);
 
         if (MainActivity.mTodayWord != null)
@@ -179,7 +171,6 @@ public class NotificatService extends Service {
     }
 
     private void showWordInNotificationBar() {
-
         Random random = new Random();
         int i = random.nextInt((int) SystemClock.uptimeMillis());
 
@@ -199,7 +190,6 @@ public class NotificatService extends Service {
         notifyBuilder.setWhen(System.currentTimeMillis());
         Intent notifyIntent = new Intent(this, MainActivity.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        // stackBuilder.addParentStack(NilActivity.class);
         stackBuilder.addNextIntent(notifyIntent);
         // 给notification设置一个独一无二的requestCode
         int requestCode = (int) SystemClock.uptimeMillis();
@@ -213,6 +203,7 @@ public class NotificatService extends Service {
 
         Notification notification = notifyBuilder.build();
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        int NOTIFY_ID = 524947901;
         mNotificationManager.notify(NOTIFY_ID, notification);
     }
 

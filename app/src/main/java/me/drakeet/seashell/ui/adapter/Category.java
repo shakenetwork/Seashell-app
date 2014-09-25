@@ -1,4 +1,4 @@
-package me.drakeet.seashell.ui;
+package me.drakeet.seashell.ui.adapter;
 
 public class Category {
 

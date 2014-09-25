@@ -1,4 +1,4 @@
-package me.drakeet.seashell.ui;
+package me.drakeet.seashell.ui.adapter;
 
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
@@ -14,11 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.drakeet.seashell.R;
+import me.drakeet.seashell.ui.adapter.Category;
+import me.drakeet.seashell.ui.adapter.Item;
+import me.drakeet.seashell.ui.adapter.MenuAdapter;
 
 public abstract class BaseListSample extends FragmentActivity implements MenuAdapter.MenuListener {
 
     private static final String STATE_ACTIVE_POSITION =
-            "me.drakeet.activePosition";
+            "me.drakeet.seashell.activePosition";
 
     protected MenuDrawer mMenuDrawer;
 

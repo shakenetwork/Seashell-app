@@ -1,9 +1,9 @@
-package me.drakeet.seashell.ui;
+package me.drakeet.seashell.ui.adapter;
 
 public class Item {
 
-    String mTitle;
-    int mIconRes;
+    public String mTitle;
+    public int mIconRes;
 
     Item(String title, int iconRes) {
         mTitle = title;

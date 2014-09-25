@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +34,8 @@ import java.util.Map;
 
 import me.drakeet.seashell.model.Word;
 import me.drakeet.seashell.service.NotificatService;
+import me.drakeet.seashell.ui.adapter.BaseListSample;
+import me.drakeet.seashell.ui.adapter.Item;
 import me.drakeet.seashell.ui.notboringactionbar.NoBoringActionBarActivity;
 import me.drakeet.seashell.utils.MySharedpreference;
 import me.drakeet.seashell.widget.PullScrollView;
@@ -46,6 +47,8 @@ import me.drakeet.seashell.R;
  */
 public class MainActivity extends BaseListSample implements PullScrollView.OnTurnListener {
 
+    static final String TAG = MainActivity.class.getSimpleName();
+
     public static boolean mIsPause = false;
     public static final int YESTERDAY = 0, TODAY = 1;
     private TextView mUseTimesTextView;
@@ -56,7 +59,6 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
     private WordViewHoder mTodayWordViewHoder;
     private PullScrollView mScrollView;
     private ImageView mHeadImg;
-    private TableLayout mMainLayout;
     private ViewPager mMainViewPager;
     private PagerTitleStrip mPagerTitleStrip;
     private ProgressBar mYesterdayProgressBar;
@@ -70,7 +72,7 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
     private NotificatService.LocalBinder mLocalBinder;
     private NotificatService mNotificatService;
 
-    public Handler mHandler = new Handler() {
+    public Handler mUpdateTodayWordHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             mTodayWord = (Word) msg.obj;
@@ -126,6 +128,9 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
         }
     }
 
+    /**
+     * 初始化 View，和 ViewHoder
+     */
     protected void initView() {
         mMenuDrawer.setContentView(R.layout.activity_main);
         mScrollView = (PullScrollView) findViewById(R.id.scroll_view);
@@ -173,7 +178,6 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
 
             @Override
             public void onPageScrollStateChanged(int i) {
-                initWord();
                 if (position == 0 && mYesterdayWord != null) {
                     setWordViewContent(mYesterdayWordViewHoder, mYesterdayWord);
                 } else if (position == 1 && mTodayWord != null) {
@@ -189,18 +193,30 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
         }
     }
 
-    private void setWordViewContent(WordViewHoder wordViewHoder, Word word) {
+    /**
+     * set the content of the WordView
+     *
+     * @param wordViewHoder
+     * @param word
+     */
+    public void setWordViewContent(WordViewHoder wordViewHoder, Word word) {
+        initWord();
         wordViewHoder.wordTextView.setText(word.getWord());
         wordViewHoder.phoneticTextView.setText(word.getPhonetic());
         wordViewHoder.speechTextView.setText(word.getSpeech());
         wordViewHoder.explanationTextView.setText(word.getExplanation());
         wordViewHoder.exampleTextView.setText(word.getExample());
         if (wordViewHoder.getId() == YESTERDAY)
-            mYesterdayProgressBar.setVisibility(View.GONE);
+            mYesterdayProgressBar.setVisibility(View.INVISIBLE);
         else
-            mTodayProgressBar.setVisibility(View.GONE);
+            mTodayProgressBar.setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * init the ViewHoder
+     * @param view the View that contain Word views.
+     * @return WordViewHoder
+     */
     private WordViewHoder getView(View view) {
         WordViewHoder wordViewHoder = new WordViewHoder();
         wordViewHoder.wordTextView = (TextView) view.findViewById(R.id.content_word);
@@ -264,8 +280,11 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
 
     }
 
+    /**
+     * on refesh button press.
+     * @param view
+     */
     public void onRefreshClick(View view) {
-
         // 往Service中传递值的对象，到Service中去处理
         mTodayProgressBar.setVisibility(View.VISIBLE);
         Parcel data = Parcel.obtain();
@@ -281,7 +300,7 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
         if (reply.readInt() == 200) {
             Message message = Message.obtain();
             message.obj = mTodayWord;
-            mHandler.sendMessage(message);
+            mUpdateTodayWordHandler.sendMessage(message);
             mTodayProgressBar.setVisibility(View.GONE);
         }
     }
@@ -303,6 +322,9 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
         // true，或者在弹出菜单后返回true，其他键返回super，让其他键默认
     }
 
+    /**
+     * on share item click
+     */
     public void onClickShare() {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");

@@ -86,7 +86,6 @@ public class MySharedpreference {
         word.setExplanation("海中软体动物的壳，贝壳。");
         word.setExample("eg. With your ear to a seashell.");
 
-        System.out.println(new Gson().toJson(word));
         String yesterdayJson = sharedPreferences.getString("yesterday_json", new Gson().toJson(word));
         String todayJson = sharedPreferences.getString("today_json", new Gson().toJson(word));
         map.put("yesterday_json", yesterdayJson);
