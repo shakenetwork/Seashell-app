@@ -1,12 +1,22 @@
 <resources>
 
-    <style name="SampleBase" parent="android:Theme.Holo">
-        <!--<item name="android:background">@drawable/title_image</item>-->
+    <style name="SampleBase" parent="android:Theme.Holo.Light">
+    <!--<item name="android:background">@drawable/title_image</item>-->
     </style>
 
-    <style name="SampleTheme" parent="SampleBase">
+    <style name="MyTheme" parent="SampleBase">
 
         <item name="menuDrawerStyle">@style/MenuDrawerStyle</item>
+        <item name="android:actionBarStyle">@style/ActionbarStyle</item>
+    </style>
+
+    <style name="ActionbarStyle" parent="android:Widget.Holo.ActionBar">
+        <item name="android:background">#000000</item>
+        <item name="android:titleTextStyle">@style/ActionbarTitleTextStyle</item>
+    </style>
+
+    <style name="ActionbarTitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="SampleTheme.BottomDrawer" parent="SampleBase">

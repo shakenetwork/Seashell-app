@@ -1,21 +1,22 @@
 package me.drakeet.seashell.ui;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.view.KeyEvent;
+import android.preference.PreferenceActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 
+import me.drakeet.seashell.R;
 
-/**
- * Created by drakeet on 8/17/2014.
- */
-public class BaseActivity extends FragmentActivity {
+public class SettingActivity extends PreferenceActivity {
 
     protected ActionBar mActionBar;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        addPreferencesFromResource(R.xml.preferences);
         initActionBar();
     }
 
@@ -26,32 +27,21 @@ public class BaseActivity extends FragmentActivity {
         mActionBar.setHomeButtonEnabled(true); // false 就无法点击
     }
 
-    public void setTitle(int resId) {
-        mActionBar.setTitle(resId);
-    }
-
-    public void setTitle(CharSequence text) {
-        mActionBar.setTitle(text);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.setting, menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 }

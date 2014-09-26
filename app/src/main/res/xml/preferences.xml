@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="Settings">
+    <CheckBoxPreference
+        android:title="Love me?"
+        android:summaryOn="Yes,I love you!"
+        android:summaryOff="No,I am sorry."
+        android:defaultValue="true">
+    </CheckBoxPreference>
+</PreferenceScreen>

@@ -415,6 +415,8 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
             startActivity(intent);
         } else if (title.equals("已背单词")) {
             startActivity(new Intent(MainActivity.this, WordListActivity.class));
+        } else if (title.equals("设置")) {
+            startActivity(new Intent(MainActivity.this, SettingActivity.class));
         } else if (title.equals("退出")) {
             mMenuDrawer.closeMenu();
             //回到桌面
