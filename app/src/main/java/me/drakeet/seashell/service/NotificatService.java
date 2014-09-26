@@ -124,11 +124,14 @@ public class NotificatService extends Service {
         MySharedpreference sharedpreference = new MySharedpreference(context);
         Map map = sharedpreference.getWordJson();
         // 如果和最新的单词是一样的，就取消更新
-        if (((String) map.get("today_json")).equals(mTodayGsonString)) {
+        if (((String) map.get("today_json")).equals(mTodayGsonString)
+                || mTodayGsonString == null
+                || mTodayGsonString.isEmpty()) {
             return;
         }
-        if (mWord != null)
+        if (mWord != null) {
             mWord.save();// save the new word to wordlist.db
+        }
         mYesterdayGsonString = (String) map.get("today_json"); // 将今天的存至昨天的
         sharedpreference.saveYesterdayJson(mYesterdayGsonString);
         sharedpreference.saveTodayJson(mTodayGsonString);
@@ -137,16 +140,14 @@ public class NotificatService extends Service {
 
     public void startNotification() {
         HttpDownloader httpDownloader = new HttpDownloader();
-        mTodayGsonString = httpDownloader
-                .download("http://test.drakeet.me/?key=seashell2");
+        mTodayGsonString = httpDownloader.download(getString(R.string.api));
         if (mTodayGsonString == null || mTodayGsonString.isEmpty()) {
             try {
                 Thread.sleep(10 * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            mTodayGsonString = httpDownloader
-                    .download("http://test.drakeet.me/?key=seashell2");
+            mTodayGsonString = httpDownloader.download(getString(R.string.api));
         }
         mWord = new Word();
         Gson gson = new Gson();
@@ -156,7 +157,8 @@ public class NotificatService extends Service {
         if (mWord != null) {
             Message message = Message.obtain();
             message.obj = mWord;
-            MainActivity.mUpdateTodayWordHandler.sendMessage(message);
+            if (MainActivity.mUpdateTodayWordHandler != null)
+                MainActivity.mUpdateTodayWordHandler.sendMessage(message);
         }
 
         Context context = getApplicationContext();

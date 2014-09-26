@@ -1,7 +1,9 @@
 package me.drakeet.seashell.ui;
 
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -13,12 +15,16 @@ import android.os.RemoteException;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
+import android.text.Html;
+import android.text.InputFilter;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +42,6 @@ import me.drakeet.seashell.model.Word;
 import me.drakeet.seashell.service.NotificatService;
 import me.drakeet.seashell.ui.adapter.BaseListSample;
 import me.drakeet.seashell.ui.adapter.Item;
-import me.drakeet.seashell.ui.notboringactionbar.NoBoringActionBarActivity;
 import me.drakeet.seashell.utils.MySharedpreference;
 import me.drakeet.seashell.widget.PullScrollView;
 
@@ -45,7 +50,7 @@ import me.drakeet.seashell.R;
 /**
  * Created by drakeet on 9/14/14.
  */
-public class MainActivity extends BaseListSample implements PullScrollView.OnTurnListener {
+public class MainActivity extends BaseListSample implements PullScrollView.OnTurnListener, View.OnClickListener {
 
     static final String TAG = MainActivity.class.getSimpleName();
 
@@ -72,7 +77,10 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
     private NotificatService.LocalBinder mLocalBinder;
     private NotificatService mNotificatService;
 
+    private TextView mUserNameTextView;
+
     public static Handler mUpdateTodayWordHandler;
+    private MySharedpreference mSharedpreference;
 
     // bind activity and service
     public ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -93,6 +101,7 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mSharedpreference = new MySharedpreference(this);
         initWord();
         initView();
         mUpdateTodayWordHandler = new Handler() {
@@ -142,6 +151,12 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
         mScrollView.init(mHeadImg);
         mMainViewPager = (ViewPager) findViewById(R.id.viewpage_main);
         mPagerTitleStrip = (PagerTitleStrip) findViewById(R.id.pager_title_strip_main);
+        mUserNameTextView = (TextView) findViewById(R.id.user_name);
+        mUserNameTextView.setOnClickListener(this);
+        String username = mSharedpreference.getString("username");
+        if (username != null) {
+            mUserNameTextView.setText(username);
+        }
 
         final View viewYesterday = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_main, null);
         final View viewToday = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_main, null);
@@ -206,15 +221,40 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
         wordViewHoder.phoneticTextView.setText(word.getPhonetic());
         wordViewHoder.speechTextView.setText(word.getSpeech());
         wordViewHoder.explanationTextView.setText(word.getExplanation());
-        wordViewHoder.exampleTextView.setText(word.getExample());
+
+        wordViewHoder.exampleTextView.setText(Html.fromHtml(boldWordParser(word.getWord().trim(), word.getExample().trim())));
         if (wordViewHoder.getId() == YESTERDAY)
             mYesterdayProgressBar.setVisibility(View.INVISIBLE);
         else
             mTodayProgressBar.setVisibility(View.INVISIBLE);
     }
 
+    private String boldWordParser(String word, String example) {
+        String string = "";
+        int index_of_ln = example.indexOf("\n");
+        for (int i = 0; i < index_of_ln; i++) {
+            string += example.charAt(i) + "";
+        }
+        string += "<br>";
+        for (int i = index_of_ln + "\n".length(); i < example.length(); i++) {
+            string += example.charAt(i) + "";
+        }
+        example = string;
+        string = "";
+        int index = example.indexOf(word);
+        for (int i = 0; i < index; i++) {
+            string += example.charAt(i) + "";
+        }
+        string = string + "<b>" + word + "</b>";
+        for (int i = index + word.length(); i < example.length(); i++) {
+            string += example.charAt(i) + "";
+        }
+        return string;
+    }
+
     /**
      * init the ViewHoder
+     *
      * @param view the View that contain Word views.
      * @return WordViewHoder
      */
@@ -234,9 +274,7 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
     private void initWord() {
         Map<String, String> map;
         Gson gson = new Gson();
-        Context context = getApplicationContext();
-        MySharedpreference sharedpreference = new MySharedpreference(context);
-        map = sharedpreference.getWordJson();
+        map = mSharedpreference.getWordJson();
         //取出
         String todayGsonString = map.get("today_json");
         String yesterdayGsonString = map.get("yesterday_json");
@@ -244,8 +282,39 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
         mYesterdayWord = gson.fromJson(yesterdayGsonString, Word.class);
         //TODO
         Map<String, Object> map2;
-        map2 = sharedpreference.getInfo();
+        map2 = mSharedpreference.getInfo();
         mTimesSting = "已更新 " + map2.get("honor") + " 次单词";
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            case R.id.user_name:
+                updataUserName();
+                break;
+        }
+    }
+
+    private void updataUserName() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final EditText editText = new EditText(this);
+        builder.setTitle("修改用户名");
+        editText.setHint("输入新用户名");
+        editText.setPadding(30, 80, 16, 30);
+        InputFilter[] filters = {new InputFilter.LengthFilter(10)};
+        editText.setFilters(filters);
+        builder.setView(editText);
+        builder.setPositiveButton("确定~", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mSharedpreference.saveString("username", editText.getText().toString());
+                mUserNameTextView.setText(editText.getText().toString());
+            }
+        });
+        builder.setNegativeButton("取消", null);
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
 
@@ -285,6 +354,7 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
 
     /**
      * on refesh button click.
+     *
      * @param view
      */
     public void onRefreshClick(View view) {
@@ -344,7 +414,7 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
             Intent intent = new Intent(MainActivity.this, AboutActivity.class);
             startActivity(intent);
         } else if (title.equals("已背单词")) {
-            startActivity(new Intent(MainActivity.this, NoBoringActionBarActivity.class));
+            startActivity(new Intent(MainActivity.this, WordListActivity.class));
         } else if (title.equals("退出")) {
             mMenuDrawer.closeMenu();
             //回到桌面

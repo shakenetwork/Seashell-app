@@ -22,6 +22,16 @@ public class MySharedpreference {
                 "userinfo", Context.MODE_PRIVATE);
     }
 
+    public boolean saveString(String key, String value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(key, value);
+        return editor.commit();
+    }
+
+    public String getString(String key) {
+        String s = sharedPreferences.getString(key, null);
+        return s;
+    }
 
     /**
      * Set the honor, it is the number of notify count.
@@ -30,43 +40,24 @@ public class MySharedpreference {
      * @return true is successful
      */
     public boolean saveHonor(int honor) {
-
-        boolean flag = false;
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("honor", honor);
-        flag = editor.commit();
-        return flag;
-    }
-
-    public boolean saveAdStatus(boolean b) {
-
-        boolean flag = false;
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean("ad_status", b);
-        flag = editor.commit();
-        return flag;
+        return editor.commit();
     }
 
     public boolean saveYesterdayJson(String string) {
-
-        boolean flag = false;
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("yesterday_json", string);
-        flag = editor.commit();
-        return flag;
+        return editor.commit();
     }
 
     public boolean saveTodayJson(String string) {
-
-        boolean flag = false;
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("today_json", string);
-        flag = editor.commit();
-        return flag;
+        return editor.commit();
     }
 
     public Map<String, Object> getInfo() {
-
         Map<String, Object> map = new HashMap<String, Object>();
         int honor = sharedPreferences.getInt("honor", 0);
         boolean adStatus = sharedPreferences.getBoolean("ad_status", true);

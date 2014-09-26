@@ -1,4 +1,4 @@
-package me.drakeet.seashell.ui.notboringactionbar;
+package me.drakeet.seashell.ui;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -24,18 +24,21 @@ import android.widget.TextView;
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import me.drakeet.seashell.R;
 import me.drakeet.seashell.model.Word;
 import me.drakeet.seashell.ui.BaseActivity;
+import me.drakeet.seashell.ui.notboringactionbar.AlphaForegroundColorSpan;
+import me.drakeet.seashell.ui.notboringactionbar.KenBurnsView;
 
 /**
  * Changed by drakeet on 9/18/2014.
  */
-public class NoBoringActionBarActivity extends BaseActivity {
+public class WordListActivity extends BaseActivity {
 
-    private static final String TAG = "NoBoringActionBarActivity";
+    private static final String TAG = "WordListActivity";
     private int mActionBarTitleColor;
     private int mActionBarHeight;
     private int mHeaderHeight;
@@ -83,10 +86,10 @@ public class NoBoringActionBarActivity extends BaseActivity {
     private void setupListView() {
         List<Word> wordList = DataSupport.findAll(Word.class);
         ArrayList<String> tData = new ArrayList<String>();
-        ArrayList<String> data = new ArrayList<String>();
         for (Word word : wordList) {
             tData.add(word.getWord() + " " + word.getSpeech() + " " + word.getExplanation());
         }
+        Collections.reverse(tData);
 
         mPlaceHolderView = getLayoutInflater().inflate(R.layout.view_header_placeholder, mListView, false);
         mListView.addHeaderView(mPlaceHolderView);
