@@ -30,7 +30,7 @@
 <img src="/screenshots/v13/notify.jpg" alt="main" title="screenshot" width="300" height="500" />
 <img src="/screenshots/v13/already.jpg" alt="main" title="screenshot" width="300" height="500" />
 <img src="/screenshots/v13/about.jpg" alt="main" title="screenshot" width="300" height="500" />
-<img src="/screenshots/s6.png" alt="main" title="screenshot" width="300" height="500" />
+![截图](/screenshots/s6.png)
 
 ## 未修复BUG
 未知，暂无^ ^
