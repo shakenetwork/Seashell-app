@@ -25,6 +25,8 @@
 
 ## 截图
 
+<img src="/screenshots/v13/main.jpg" alt="main" title="screenshot" width="500" height="300" />
+
 ![截图](/screenshots/s1.png)
 ![截图](/screenshots/s2.png)
 ![截图](/screenshots/s3.png)
