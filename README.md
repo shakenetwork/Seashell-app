@@ -25,14 +25,12 @@
 
 ## 截图
 
-<img src="/screenshots/v13/main.jpg" alt="main" title="screenshot" width="500" height="300" />
-
-![截图](/screenshots/s1.png)
-![截图](/screenshots/s2.png)
-![截图](/screenshots/s3.png)
-![截图](/screenshots/s4.png)
-![截图](/screenshots/s5.png)
-![截图](/screenshots/s6.png)
+<img src="/screenshots/v13/main.jpg" alt="main" title="screenshot" width="300" height="500" />
+<img src="/screenshots/v13/drawer.jpg" alt="main" title="screenshot" width="300" height="500" />
+<img src="/screenshots/v13/notify.jpg" alt="main" title="screenshot" width="300" height="500" />
+<img src="/screenshots/v13/already.jpg" alt="main" title="screenshot" width="300" height="500" />
+<img src="/screenshots/v13/about.jpg" alt="main" title="screenshot" width="300" height="500" />
+<img src="/screenshots/s6.png" alt="main" title="screenshot" width="300" height="500" />
 
 ## 未修复BUG
 未知，暂无^ ^
