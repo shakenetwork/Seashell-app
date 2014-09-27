@@ -193,6 +193,7 @@ public class NotificatService extends Service {
         // 这里用来显示右下角的数字
         notifyBuilder.setWhen(System.currentTimeMillis());
         Intent notifyIntent = new Intent(this, MainActivity.class);
+        notifyIntent.putExtra("is_from_notification", true);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addNextIntent(notifyIntent);
         // 给notification设置一个独一无二的requestCode

@@ -32,12 +32,17 @@
     </style>
 
     <style name="MenuDrawerStyle" parent="Widget.MenuDrawer">
-        <item name="mdActiveIndicator">@drawable/menu_arrow_end</item>
+        <item name="mdActiveIndicator">@drawable/menu_arrow_start</item>
         <item name="mdMenuSize">150dp</item>
     </style>
 
     <style name="MenuDrawerStyle.Right" parent="Widget.MenuDrawer">
         <item name="mdActiveIndicator">@drawable/menu_arrow_end</item>
+        <item name="mdMenuSize">150dp</item>
+    </style>
+
+    <style name="MenuDrawerStyle.Start" parent="Widget.MenuDrawer">
+        <item name="mdActiveIndicator">@drawable/menu_arrow_start</item>
         <item name="mdMenuSize">150dp</item>
     </style>
 

@@ -3,9 +3,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="Settings">
     <CheckBoxPreference
-        android:title="Love me?"
-        android:summaryOn="Yes,I love you!"
-        android:summaryOff="No,I am sorry."
+        android:title="左手习惯"
+        android:key="@string/hand_switch"
+        android:summaryOn="当前为左手习惯"
+        android:summaryOff="当前为右手习惯"
+        android:defaultValue="false">
+    </CheckBoxPreference>
+    <CheckBoxPreference
+        android:title="开机自启动"
+        android:summaryOn="@string/xiaomi_attention"
+        android:summaryOff="@string/xiaomi_attention"
         android:defaultValue="true">
     </CheckBoxPreference>
 </PreferenceScreen>

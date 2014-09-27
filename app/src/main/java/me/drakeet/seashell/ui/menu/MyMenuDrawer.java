@@ -1,4 +1,4 @@
-package me.drakeet.seashell.ui.adapter;
+package me.drakeet.seashell.ui.menu;
 
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
@@ -14,11 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.drakeet.seashell.R;
-import me.drakeet.seashell.ui.adapter.Category;
-import me.drakeet.seashell.ui.adapter.Item;
-import me.drakeet.seashell.ui.adapter.MenuAdapter;
+import me.drakeet.seashell.utils.MySharedpreference;
 
-public abstract class BaseListSample extends FragmentActivity implements MenuAdapter.MenuListener {
+public abstract class MyMenuDrawer extends FragmentActivity implements MenuAdapter.MenuListener {
 
     private static final String STATE_ACTIVE_POSITION =
             "me.drakeet.seashell.activePosition";
@@ -29,6 +27,7 @@ public abstract class BaseListSample extends FragmentActivity implements MenuAda
     protected ListView mList;
 
     private int mActivePosition = 0;
+    private int width;
 
     @Override
     protected void onCreate(Bundle inState) {
@@ -38,11 +37,21 @@ public abstract class BaseListSample extends FragmentActivity implements MenuAda
         }
         DisplayMetrics metric = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metric);
-        int width = (int) (metric.widthPixels / 10 * 4.62); // 获取屏幕宽度（像素），并且侧滑菜单占6/10比例，接近黄金比例~
+        width = (int) (metric.widthPixels / 10 * 4.62); // 获取屏幕宽度（像素），并且侧滑菜单占6/10比例，接近黄金比例~
 
+        //initMenuDrawer();
+    }
+
+    protected void initMenuDrawer() {
         mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.BEHIND, getDrawerPosition(), getDragMode());
         List<Object> items = new ArrayList<Object>();
-        items.add(new Item("注册/登录", R.drawable.avatar));
+        MySharedpreference mySharedpreference = new MySharedpreference(this);
+        String username = mySharedpreference.getString("username");
+        if (username != null) {
+            items.add(new Item(username, R.drawable.avatar));
+        } else {
+            items.add(new Item("注册/登录", R.drawable.avatar));
+        }
         items.add(new Category("Cat 1"));
         items.add(new Item("我的收藏", R.drawable.toolbar_fav_icon_res));
         items.add(new Item("已背单词", R.drawable.navigationbar_check));
@@ -60,8 +69,20 @@ public abstract class BaseListSample extends FragmentActivity implements MenuAda
         mAdapter.setActivePosition(mActivePosition);
         mList.setAdapter(mAdapter);
         mList.setOnItemClickListener(mItemClickListener);
+        mMenuDrawer.setupUpIndicator(this);
+        mMenuDrawer.setDrawerIndicatorEnabled(true);
         mMenuDrawer.setMenuView(mList);
         mMenuDrawer.setMenuSize(width);
+    }
+
+    public ListView getListView() {
+        return mList;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        initMenuDrawer();
     }
 
     protected abstract void onMenuItemClicked(int position, Item item);

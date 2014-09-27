@@ -1,7 +1,9 @@
 <resources>
 
     <style name="SampleBase" parent="android:Theme.Holo.Light">
-    <!--<item name="android:background">@drawable/title_image</item>-->
+        <!--<item name="android:background">@drawable/title_image</item>
+            <item name="android:displayOptions">homeAsUp|showTitle|showHome</item>
+        -->
     </style>
 
     <style name="MyTheme" parent="SampleBase">
@@ -11,7 +13,7 @@
     </style>
 
     <style name="ActionbarStyle" parent="android:Widget.Holo.ActionBar">
-        <item name="android:background">#000000</item>
+        <item name="android:background">#ffa07cdc</item>
         <item name="android:titleTextStyle">@style/ActionbarTitleTextStyle</item>
     </style>
 
@@ -20,7 +22,7 @@
     </style>
 
     <style name="SampleTheme.BottomDrawer" parent="SampleBase">
-        <item name="menuDrawerStyle">@style/MenuDrawerStyle.Right</item>
+        <item name="menuDrawerStyle">@style/MenuDrawerStyle.Start</item>
     </style>
 
 </resources>

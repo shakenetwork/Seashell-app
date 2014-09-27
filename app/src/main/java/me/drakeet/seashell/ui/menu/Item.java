@@ -1,4 +1,4 @@
-package me.drakeet.seashell.ui.adapter;
+package me.drakeet.seashell.ui.menu;
 
 public class Item {
 

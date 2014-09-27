@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="45dp"
             android:src="@drawable/avatar80x80"/>
 
         <TextView
@@ -73,7 +73,7 @@
             android:layout_below="@+id/versionNumber"
             android:layout_marginLeft="28dp"
             android:layout_marginTop="28dp"
-            android:lineSpacingMultiplier="1.4"
+            android:textColor="@color/lite_text_color"
             android:text="@string/my_name"/>
 
         <TextView
@@ -83,8 +83,8 @@
             android:layout_alignLeft="@+id/textView1"
             android:layout_alignStart="@+id/textView1"
             android:layout_below="@+id/textView1"
-            android:layout_marginTop="6dp"
-            android:lineSpacingMultiplier="1.4"
+            android:layout_marginTop="@dimen/about_line_marginTop"
+            android:textColor="@color/lite_text_color"
             android:text="@string/my_email"/>
 
         <TextView
@@ -94,9 +94,9 @@
             android:layout_alignLeft="@+id/textView1"
             android:layout_alignStart="@+id/textView1"
             android:layout_below="@+id/textView"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="@dimen/about_line_marginTop"
             android:autoLink="web"
-            android:lineSpacingMultiplier="1.4"
+            android:textColor="@color/lite_text_color"
             android:text="@string/my_open_source_link"/>
 
         <TextView
@@ -106,9 +106,9 @@
             android:layout_alignLeft="@+id/textView1"
             android:layout_alignStart="@+id/textView1"
             android:layout_below="@+id/textView2"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="@dimen/about_line_marginTop"
             android:autoLink="web"
-            android:lineSpacingMultiplier="1.4"
+            android:textColor="@color/lite_text_color"
             android:text="@string/my_blog"/>
 
         <TextView
@@ -117,6 +117,7 @@
             android:layout_height="wrap_content"
             android:autoLink="web"
             android:lineSpacingMultiplier="1.4"
+            android:textColor="@color/lite_text_color"
             android:text="@string/about_declaration"
             android:layout_below="@+id/textView3"
             android:layout_alignLeft="@+id/textView3"

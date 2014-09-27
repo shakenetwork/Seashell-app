@@ -6,5 +6,6 @@
 
     <dimen name="header_height">250dp</dimen>
     <dimen name="header_logo_size">100dp</dimen>
+    <dimen name="about_line_marginTop">5dp</dimen>
 
 </resources>

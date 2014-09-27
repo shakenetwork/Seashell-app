@@ -1,23 +1,38 @@
 package me.drakeet.seashell.ui;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import me.drakeet.seashell.R;
+import me.drakeet.seashell.utils.MySharedpreference;
+import me.drakeet.seashell.utils.TaskUtils;
+import me.drakeet.seashell.utils.ToastUtils;
 
-public class SettingActivity extends PreferenceActivity {
+public class SettingActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener,
+        Preference.OnPreferenceClickListener {
 
     protected ActionBar mActionBar;
+    private String mHandSwitch;
+    private CheckBoxPreference mHandSwitchCheckPref;
+    private MySharedpreference mSharedpreference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
+        mSharedpreference = new MySharedpreference(this);
         initActionBar();
+        mHandSwitch = getResources().getString(R.string.hand_switch);
+        mHandSwitchCheckPref = (CheckBoxPreference) findPreference(mHandSwitch);
+        mHandSwitchCheckPref.setOnPreferenceChangeListener(this);
+        Boolean hand = mSharedpreference.getBoolean("hand_switch");
+        mHandSwitchCheckPref.setChecked(hand);
+        //mHandSwitchCheckPref.setOnPreferenceClickListener(this);
     }
 
     private void initActionBar() {
@@ -43,5 +58,29 @@ public class SettingActivity extends PreferenceActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void toogleHandSwitch() {
+
+    }
+
+    @Override
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
+        if (preference.getKey().equals(mHandSwitch)) {
+            mSharedpreference.saveBoolean("hand_switch", !mHandSwitchCheckPref.isChecked());
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onPreferenceClick(Preference preference) {
+        if (preference.getKey().equals(mHandSwitch)) {
+
+        } else {
+            return false;
+        }
+        return true;
     }
 }

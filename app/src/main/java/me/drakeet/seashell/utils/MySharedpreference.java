@@ -28,9 +28,31 @@ public class MySharedpreference {
         return editor.commit();
     }
 
+    public boolean saveInt(String key, int value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(key, value);
+        return editor.commit();
+    }
+
+    public boolean saveBoolean(String key, Boolean value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(key, value);
+        return editor.commit();
+    }
+
     public String getString(String key) {
         String s = sharedPreferences.getString(key, null);
         return s;
+    }
+
+    public int getInt(String key) {
+        int i = sharedPreferences.getInt(key, 1);
+        return i;
+    }
+
+    public Boolean getBoolean(String key) {
+        Boolean b = sharedPreferences.getBoolean(key, false);
+        return b;
     }
 
     /**

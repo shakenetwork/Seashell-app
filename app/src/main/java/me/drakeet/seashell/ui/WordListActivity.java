@@ -1,17 +1,10 @@
 package me.drakeet.seashell.ui;
 
 import android.app.ActionBar;
-import android.app.Activity;
-import android.content.Context;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.TypefaceSpan;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -19,7 +12,6 @@ import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import org.litepal.crud.DataSupport;
 
@@ -29,7 +21,6 @@ import java.util.List;
 
 import me.drakeet.seashell.R;
 import me.drakeet.seashell.model.Word;
-import me.drakeet.seashell.ui.BaseActivity;
 import me.drakeet.seashell.ui.notboringactionbar.AlphaForegroundColorSpan;
 import me.drakeet.seashell.ui.notboringactionbar.KenBurnsView;
 
@@ -66,7 +57,7 @@ public class WordListActivity extends BaseActivity {
         mHeaderHeight = getResources().getDimensionPixelSize(R.dimen.header_height);
         mMinHeaderTranslation = -mHeaderHeight + getActionBarHeight();
 
-        setContentView(R.layout.activity_noboringactionbar);
+        setContentView(R.layout.activity_wordlist);
 
         mListView = (ListView) findViewById(R.id.listview);
         mHeader = findViewById(R.id.header);

@@ -1,4 +1,4 @@
-package me.drakeet.seashell.ui.adapter;
+package me.drakeet.seashell.ui.menu;
 
 import android.content.Context;
 import android.os.Build;
@@ -7,10 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
 import me.drakeet.seashell.R;
+import me.drakeet.seashell.utils.ToastUtils;
 
 public class MenuAdapter extends BaseAdapter {
 
@@ -67,6 +69,11 @@ public class MenuAdapter extends BaseAdapter {
 
     @Override
     public boolean isEnabled(int position) {
+//        if (position == 2) {
+//            ((MyMenuDrawer) mContext).getListView().getChildAt(2).setEnabled(false);
+//            ((MyMenuDrawer) mContext).getListView().getChildAt(2).setClickable(false);
+//            return false;
+//        }
         return getItem(position) instanceof Item;
     }
 
@@ -94,6 +101,7 @@ public class MenuAdapter extends BaseAdapter {
 
             TextView tv = (TextView) v;
             tv.setText(((Item) item).mTitle);
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 tv.setCompoundDrawablesRelativeWithIntrinsicBounds(((Item) item).mIconRes, 0, 0, 0);
             } else {

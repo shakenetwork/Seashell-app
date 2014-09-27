@@ -24,7 +24,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,9 +39,10 @@ import java.util.Map;
 
 import me.drakeet.seashell.model.Word;
 import me.drakeet.seashell.service.NotificatService;
-import me.drakeet.seashell.ui.adapter.BaseListSample;
-import me.drakeet.seashell.ui.adapter.Item;
+import me.drakeet.seashell.ui.menu.MyMenuDrawer;
+import me.drakeet.seashell.ui.menu.Item;
 import me.drakeet.seashell.utils.MySharedpreference;
+import me.drakeet.seashell.utils.ToastUtils;
 import me.drakeet.seashell.widget.PullScrollView;
 
 import me.drakeet.seashell.R;
@@ -50,7 +50,7 @@ import me.drakeet.seashell.R;
 /**
  * Created by drakeet on 9/14/14.
  */
-public class MainActivity extends BaseListSample implements PullScrollView.OnTurnListener, View.OnClickListener {
+public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnListener, View.OnClickListener {
 
     static final String TAG = MainActivity.class.getSimpleName();
 
@@ -78,6 +78,7 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
     private NotificatService mNotificatService;
 
     private TextView mUserNameTextView;
+    private String mUserName;
 
     public static Handler mUpdateTodayWordHandler;
     private MySharedpreference mSharedpreference;
@@ -102,8 +103,12 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSharedpreference = new MySharedpreference(this);
+        Boolean isFromNotification = getIntent().getBooleanExtra("is_from_notification", false);
         initWord();
-        initView();
+        if (isFromNotification) {
+            ToastUtils.showShort("^ ^浏览次数+1");
+            updataLookCount(true);
+        }
         mUpdateTodayWordHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -116,6 +121,22 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
         serviceIntent = new Intent(this, NotificatService.class);
         startService(serviceIntent);
         bindService(serviceIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    private void updataLookCount(Boolean isPlus) {
+        TextView textView = (TextView) findViewById(R.id.user_book);
+        int lookCount = mSharedpreference.getInt("look_count");
+        String s = "详细浏览次数：" + lookCount + " 次";
+        textView.setText(s);
+        if (isPlus)
+            mSharedpreference.saveInt("look_count", ++lookCount);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // reset menudrawer position
+        initView();
     }
 
     @Override
@@ -153,10 +174,11 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
         mPagerTitleStrip = (PagerTitleStrip) findViewById(R.id.pager_title_strip_main);
         mUserNameTextView = (TextView) findViewById(R.id.user_name);
         mUserNameTextView.setOnClickListener(this);
-        String username = mSharedpreference.getString("username");
-        if (username != null) {
-            mUserNameTextView.setText(username);
+        mUserName = mSharedpreference.getString("username");
+        if (mUserName != null) {
+            mUserNameTextView.setText(mUserName);
         }
+        updataLookCount(false);
 
         final View viewYesterday = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_main, null);
         final View viewToday = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_main, null);
@@ -417,6 +439,9 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
             startActivity(new Intent(MainActivity.this, WordListActivity.class));
         } else if (title.equals("设置")) {
             startActivity(new Intent(MainActivity.this, SettingActivity.class));
+        } else if (title.equals(mUserName) || title.equals("注册/登录")) {
+            updataUserName();
+            ToastUtils.showLong("更改之后，侧滑菜单项目将在下一次启动后更新^ ^");
         } else if (title.equals("退出")) {
             mMenuDrawer.closeMenu();
             //回到桌面
@@ -436,6 +461,9 @@ public class MainActivity extends BaseListSample implements PullScrollView.OnTur
 
     @Override
     protected Position getDrawerPosition() {
+        if (mSharedpreference != null && mSharedpreference.getBoolean("hand_switch")) {
+            return Position.START;
+        }
         return Position.END;
     }
 

@@ -2,8 +2,8 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="me.drakeet.seashell.ui.SettingActivity">
     <item
-        android:id="@+id/action_settings"
-        android:title="@string/action_settings"
+        android:id="@+id/action_back"
+        android:title="@string/action_back"
         android:orderInCategory="100"
         android:showAsAction="never"/>
 </menu>
