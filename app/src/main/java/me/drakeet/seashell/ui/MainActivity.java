@@ -103,12 +103,8 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSharedpreference = new MySharedpreference(this);
-        Boolean isFromNotification = getIntent().getBooleanExtra("is_from_notification", false);
         initWord();
-        if (isFromNotification) {
-            ToastUtils.showShort("^ ^浏览次数+1");
-            updataLookCount(true);
-        }
+
         mUpdateTodayWordHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -135,8 +131,14 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
     @Override
     protected void onStart() {
         super.onStart();
+        Boolean isFromNotification = getIntent().getBooleanExtra("is_from_notification", false);
         // reset menudrawer position
         initView();
+        if (isFromNotification) {
+            ToastUtils.showShort("^ ^浏览次数+1");
+            updataLookCount(true);
+            getIntent().putExtra("is_from_notification", false);
+        }
     }
 
     @Override
