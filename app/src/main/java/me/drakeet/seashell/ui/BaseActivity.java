@@ -8,6 +8,7 @@ import android.view.MenuItem;
 
 
 /**
+ *
  * Created by drakeet on 8/17/2014.
  */
 public class BaseActivity extends FragmentActivity {
