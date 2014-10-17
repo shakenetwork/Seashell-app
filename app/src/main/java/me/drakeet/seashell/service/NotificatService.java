@@ -46,8 +46,8 @@ public class NotificatService extends Service {
     boolean isFirstTime = true;
     private String mTodayGsonString;
     private String mYesterdayGsonString;
-    private LocalBinder localBinder = new LocalBinder();
-    public static boolean hasNewWord = true;
+    private       LocalBinder localBinder = new LocalBinder();
+    public static boolean     hasNewWord  = true;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -64,20 +64,22 @@ public class NotificatService extends Service {
                                      int flags) throws RemoteException {
             //表示从activity中获取数值
             if (data.readInt() == 199) {
-                TaskUtils.executeAsyncTask(new AsyncTask<Object, Object, Object>() {
-                    @Override
-                    protected Object doInBackground(Object... params) {
-                        startNotification();
-                        return null;
-                    }
+                TaskUtils.executeAsyncTask(
+                        new AsyncTask<Object, Object, Object>() {
+                            @Override
+                            protected Object doInBackground(Object... params) {
+                                startNotification();
+                                return null;
+                            }
 
-                    @Override
-                    protected void onPreExecute() {
-                        super.onPreExecute();
-                        Toast.makeText(getApplicationContext(), "更新完成", Toast.LENGTH_SHORT).show();
-                        reply.writeInt(200);
-                    }
-                });
+                            @Override
+                            protected void onPreExecute() {
+                                super.onPreExecute();
+                                Toast.makeText(getApplicationContext(), "更新完成", Toast.LENGTH_SHORT).show();
+                                reply.writeInt(200);
+                            }
+                        }
+                );
             }
             return super.onTransact(code, data, reply, flags);
         }
@@ -86,34 +88,36 @@ public class NotificatService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        thread = new Thread(new Runnable() {
+        thread = new Thread(
+                new Runnable() {
 
-            @Override
-            public void run() {
-                Date date = new Date();
+                    @Override
+                    public void run() {
+                        Date date = new Date();
 
-                while (stopRequested == false) {
-                    if (isFirstTime) {
-                        firstTime = date.getDate();
-                        startNotification();
-                        isFirstTime = false;
-                    }
-                    date = new Date();
-                    int currentTime = date.getDate();
-                    if (currentTime != firstTime) {
-                        startNotification();
-                        firstTime = currentTime;
-                    }
+                        while (stopRequested == false) {
+                            if (isFirstTime) {
+                                firstTime = date.getDate();
+                                startNotification();
+                                isFirstTime = false;
+                            }
+                            date = new Date();
+                            int currentTime = date.getDate();
+                            if (currentTime != firstTime) {
+                                startNotification();
+                                firstTime = currentTime;
+                            }
 
-                    try {
-                        Log.i("Seashell-->", "onStartCommand is runing");
-                        Thread.sleep(120 * 1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                            try {
+                                Log.i("Seashell-->", "onStartCommand is runing");
+                                Thread.sleep(120 * 1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 }
-            }
-        });
+        );
         thread.start();
 
         return super.onStartCommand(intent, flags, startId);
@@ -152,7 +156,7 @@ public class NotificatService extends Service {
         mWord = new Word();
         Gson gson = new Gson();
         mWord = gson.fromJson(mTodayGsonString, Word.class);
-        showWordInNotificationBar();
+        showWordInNotificationBar(mWord);
 
         if (mWord != null) {
             Message message = Message.obtain();
@@ -174,21 +178,26 @@ public class NotificatService extends Service {
             MainActivity.mTodayWord = mWord;
     }
 
-    private void showWordInNotificationBar() {
+    private void showWordInNotificationBar(Word word) {
         Random random = new Random();
         int i = random.nextInt((int) SystemClock.uptimeMillis());
 
         NotificationCompat.Builder notifyBuilder;
         notifyBuilder = new NotificationCompat.Builder(
-                this);
+                this
+        );
         notifyBuilder.setSmallIcon(R.drawable.ic_launcher);
         // 初始化
         notifyBuilder.setContentTitle("未联网");
         notifyBuilder.setContentText("请尝试联网后重启程序...");
-        if (mWord != null) {
-            notifyBuilder.setContentTitle(mWord.getWord());
-            notifyBuilder.setContentText(mWord.getSpeech() + " "
-                    + mWord.getExplanation());
+        MySharedpreference mySharedpreference = new MySharedpreference(this);
+        boolean isWithPhonetic = mySharedpreference.getBoolean(getString(R.string.notify_with_phonetic));
+        if (word != null) {
+            if (isWithPhonetic)
+                notifyBuilder.setContentTitle(word.getWord() + " " + word.getPhonetic());
+            else
+                notifyBuilder.setContentTitle(word.getWord());
+            notifyBuilder.setContentText(word.getSpeech() + " " + word.getExplanation());
         }
         // 这里用来显示右下角的数字
         notifyBuilder.setWhen(System.currentTimeMillis());
@@ -199,7 +208,8 @@ public class NotificatService extends Service {
         // 给notification设置一个独一无二的requestCode
         int requestCode = (int) SystemClock.uptimeMillis();
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(
-                requestCode, PendingIntent.FLAG_UPDATE_CURRENT);
+                requestCode, PendingIntent.FLAG_UPDATE_CURRENT
+        );
         notifyBuilder.setContentIntent(resultPendingIntent);
         notifyBuilder.setPriority(NotificationCompat.PRIORITY_MIN);
         notifyBuilder.setOngoing(true);

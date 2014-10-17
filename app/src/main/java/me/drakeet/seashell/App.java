@@ -5,6 +5,9 @@ import android.content.Context;
 
 import org.litepal.LitePalApplication;
 
+import me.drakeet.seashell.model.Word;
+import me.drakeet.seashell.utils.MySharedpreference;
+
 /**
  * Created by drakeet on 9/27/14.
  */

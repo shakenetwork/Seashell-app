@@ -8,18 +8,25 @@ import android.preference.PreferenceActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.gson.Gson;
+
+import java.util.Map;
+
 import me.drakeet.seashell.R;
+import me.drakeet.seashell.model.Word;
 import me.drakeet.seashell.utils.MySharedpreference;
-import me.drakeet.seashell.utils.TaskUtils;
+import me.drakeet.seashell.utils.NotificationUtils;
 import me.drakeet.seashell.utils.ToastUtils;
 
 public class SettingActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener,
         Preference.OnPreferenceClickListener {
 
-    protected ActionBar mActionBar;
-    private String mHandSwitch;
-    private CheckBoxPreference mHandSwitchCheckPref;
-    private MySharedpreference mSharedpreference;
+    protected ActionBar          mActionBar;
+    private   String             mHandSwitch;
+    private   String             mPhonetickey;
+    private   CheckBoxPreference mHandSwitchCheckPref;
+    private   CheckBoxPreference mPhoneticSwitchCheckPref;
+    private   MySharedpreference mSharedpreference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +34,19 @@ public class SettingActivity extends PreferenceActivity implements Preference.On
         addPreferencesFromResource(R.xml.preferences);
         mSharedpreference = new MySharedpreference(this);
         initActionBar();
+        setTitle("设置");
         mHandSwitch = getResources().getString(R.string.hand_switch);
+        mPhonetickey = getResources().getString(R.string.notify_with_phonetic);
         mHandSwitchCheckPref = (CheckBoxPreference) findPreference(mHandSwitch);
+        mPhoneticSwitchCheckPref = (CheckBoxPreference) findPreference(mPhonetickey);
+
         mHandSwitchCheckPref.setOnPreferenceChangeListener(this);
         Boolean hand = mSharedpreference.getBoolean("hand_switch");
         mHandSwitchCheckPref.setChecked(hand);
+
+        mPhoneticSwitchCheckPref.setOnPreferenceChangeListener(this);
+        Boolean isShowPhonetic = mSharedpreference.getBoolean(mPhonetickey);
+        mPhoneticSwitchCheckPref.setChecked(isShowPhonetic);
         //mHandSwitchCheckPref.setOnPreferenceClickListener(this);
     }
 
@@ -44,20 +59,18 @@ public class SettingActivity extends PreferenceActivity implements Preference.On
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.setting, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int id = item.getItemId();
+        if (id == R.id.action_back) {
+            finish();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void toogleHandSwitch() {
@@ -68,9 +81,20 @@ public class SettingActivity extends PreferenceActivity implements Preference.On
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         if (preference.getKey().equals(mHandSwitch)) {
             mSharedpreference.saveBoolean("hand_switch", !mHandSwitchCheckPref.isChecked());
+        } else if (preference.getKey().equals(mPhonetickey)) {
+            mSharedpreference.saveBoolean(mPhonetickey, !mPhoneticSwitchCheckPref.isChecked());
+            if (!mPhoneticSwitchCheckPref.isChecked()) {
+
+                ToastUtils.showLong("已开启通知栏显示音标设置！\n但为了保持简洁性，建议是关闭^ ^");
+            }
+            Map<String, String> map = mSharedpreference.getWordJson();
+            String jsonString = map.get("today_json");
+            Word word = new Gson().fromJson(jsonString, Word.class);
+            NotificationUtils.showWordInNotificationBar(this, word);
         } else {
             return false;
         }
+
         return true;
     }
 

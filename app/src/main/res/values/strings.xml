@@ -25,5 +25,6 @@
     <string name="hand_switch">left_hand_key</string>
     <string name="my_favorite">我的收藏</string>
     <string name="xiaomi_attention"><![CDATA[小米用户系统请进入系统应用:安全中心->授权管理->自启动应用管理 后允许『贝壳单词』自启动，否则无法自启动]]></string>
+    <string name="notify_with_phonetic">notify_with_phonetic</string>
 
 </resources>
