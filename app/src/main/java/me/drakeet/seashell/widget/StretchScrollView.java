@@ -20,18 +20,18 @@ public class StretchScrollView extends ScrollView {
     /**
      * The max scroll height.
      */
-    private static final int MAX_SCROLL_HEIGHT = 400;
+    private static final int   MAX_SCROLL_HEIGHT = 400;
     /**
      * Damping, the smaller the greater the resistance
      */
-    private static final float SCROLL_RATIO = 0.4f;
+    private static final float SCROLL_RATIO      = 0.4f;
 
     private View mChildRootView;
 
     private float mTouchY;
     private boolean mTouchStop = false;
 
-    private int mScrollY = 0;
+    private int mScrollY  = 0;
     private int mScrollDy = 0;
 
     private Handler mHandler = new Handler() {

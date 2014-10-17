@@ -19,8 +19,12 @@ public class HttpDownloader {
             url = new URL(urlStr);
             HttpURLConnection urlConn = (HttpURLConnection) url
                     .openConnection();
-            buffer = new BufferedReader(new InputStreamReader(urlConn
-                    .getInputStream()));
+            buffer = new BufferedReader(
+                    new InputStreamReader(
+                            urlConn
+                                    .getInputStream()
+                    )
+            );
             while ((line = buffer.readLine()) != null) {
                 sb.append(line);
             }

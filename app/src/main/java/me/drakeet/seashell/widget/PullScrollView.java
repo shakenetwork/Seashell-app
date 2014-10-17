@@ -239,16 +239,20 @@ public class PullScrollView extends ScrollView {
             // 初始化头部矩形
             if (mRect.isEmpty()) {
                 // 保存正常的布局位置
-                mRect.set(mChildView.getLeft(), mChildView.getTop(), mChildView.getRight(),
-                        mChildView.getBottom());
+                mRect.set(
+                        mChildView.getLeft(), mChildView.getTop(), mChildView.getRight(),
+                        mChildView.getBottom()
+                );
             }
 
             // 移动背景图(手势移动的距离*阻尼系数*0.5)
             float bgMoveH = deltaY * 0.5f * SCROLL_RATIO;
             mCurrentTop = (int) (mInitTop + bgMoveH);
             mCurrentBottom = (int) (mInitBottom + bgMoveH);
-            mHeadImage.layout(mHeadImage.getLeft(), mCurrentTop, mHeadImage.getRight(),
-                    mCurrentBottom);
+            mHeadImage.layout(
+                    mHeadImage.getLeft(), mCurrentTop, mHeadImage.getRight(),
+                    mCurrentBottom
+            );
 
             // 移动布局(手势移动的距离*阻尼系数)
             float childMoveH = deltaY * SCROLL_RATIO;
@@ -259,8 +263,10 @@ public class PullScrollView extends ScrollView {
                 childMoveH -= mRect.top + childMoveH - top;
             }
 
-            mChildView.layout(mRect.left, (int) (mRect.top + childMoveH),
-                    mRect.right, (int) (mRect.bottom + childMoveH));
+            mChildView.layout(
+                    mRect.left, (int) (mRect.top + childMoveH),
+                    mRect.right, (int) (mRect.bottom + childMoveH)
+            );
         }
     }
 
@@ -268,8 +274,10 @@ public class PullScrollView extends ScrollView {
      * 回滚动画
      */
     private void rollBackAnimation() {
-        TranslateAnimation image_Anim = new TranslateAnimation(0, 0,
-                Math.abs(mInitTop - mCurrentTop), 0);
+        TranslateAnimation image_Anim = new TranslateAnimation(
+                0, 0,
+                Math.abs(mInitTop - mCurrentTop), 0
+        );
         image_Anim.setDuration(200);
         mHeadImage.startAnimation(image_Anim);
 

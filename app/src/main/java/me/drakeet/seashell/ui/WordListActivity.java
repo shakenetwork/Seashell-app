@@ -30,22 +30,22 @@ import me.drakeet.seashell.ui.notboringactionbar.KenBurnsView;
 public class WordListActivity extends BaseActivity {
 
     private static final String TAG = "WordListActivity";
-    private int mActionBarTitleColor;
-    private int mActionBarHeight;
-    private int mHeaderHeight;
-    private int mMinHeaderTranslation;
-    private ListView mListView;
-    private KenBurnsView mHeaderPicture;
-    private ImageView mHeaderLogo;
-    private View mHeader;
-    private View mPlaceHolderView;
+    private int                              mActionBarTitleColor;
+    private int                              mActionBarHeight;
+    private int                              mHeaderHeight;
+    private int                              mMinHeaderTranslation;
+    private ListView                         mListView;
+    private KenBurnsView                     mHeaderPicture;
+    private ImageView                        mHeaderLogo;
+    private View                             mHeader;
+    private View                             mPlaceHolderView;
     private AccelerateDecelerateInterpolator mSmoothInterpolator;
 
     private RectF mRect1 = new RectF();
     private RectF mRect2 = new RectF();
 
     private AlphaForegroundColorSpan mAlphaForegroundColorSpan;
-    private SpannableString mSpannableString;
+    private SpannableString          mSpannableString;
 
     private TypedValue mTypedValue = new TypedValue();
 
@@ -85,26 +85,28 @@ public class WordListActivity extends BaseActivity {
         mPlaceHolderView = getLayoutInflater().inflate(R.layout.view_header_placeholder, mListView, false);
         mListView.addHeaderView(mPlaceHolderView);
         mListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, tData));
-        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-            }
+        mListView.setOnScrollListener(
+                new AbsListView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(AbsListView view, int scrollState) {
+                    }
 
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                int scrollY = getScrollY();
-                //sticky actionbar
-                mHeader.setTranslationY(Math.max(-scrollY, mMinHeaderTranslation));
-                //header_logo --> actionbar icon
-                float ratio = clamp(mHeader.getTranslationY() / mMinHeaderTranslation, 0.0f, 1.0f);
-                interpolate(mHeaderLogo, getActionBarIconView(), mSmoothInterpolator.getInterpolation(ratio));
-                //actionbar title alpha
-                //getActionBarTitleView().setAlpha(clamp(5.0F * ratio - 4.0F, 0.0F, 1.0F));
-                //---------------------------------
-                //better way thanks to @cyrilmottier
-                setTitleAlpha(clamp(5.0F * ratio - 4.0F, 0.0F, 1.0F));
-            }
-        });
+                    @Override
+                    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                        int scrollY = getScrollY();
+                        //sticky actionbar
+                        mHeader.setTranslationY(Math.max(-scrollY, mMinHeaderTranslation));
+                        //header_logo --> actionbar icon
+                        float ratio = clamp(mHeader.getTranslationY() / mMinHeaderTranslation, 0.0f, 1.0f);
+                        interpolate(mHeaderLogo, getActionBarIconView(), mSmoothInterpolator.getInterpolation(ratio));
+                        //actionbar title alpha
+                        //getActionBarTitleView().setAlpha(clamp(5.0F * ratio - 4.0F, 0.0F, 1.0F));
+                        //---------------------------------
+                        //better way thanks to @cyrilmottier
+                        setTitleAlpha(clamp(5.0F * ratio - 4.0F, 0.0F, 1.0F));
+                    }
+                }
+        );
     }
 
     private void setTitleAlpha(float alpha) {

@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import me.drakeet.materialdialog.MaterialDialog;
 import me.drakeet.seashell.model.Word;
 import me.drakeet.seashell.service.NotificatService;
 import me.drakeet.seashell.ui.menu.MyMenuDrawer;
@@ -50,38 +51,41 @@ import me.drakeet.seashell.R;
 /**
  * Created by drakeet on 9/14/14.
  */
-public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnListener, View.OnClickListener {
+public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnListener, View.OnClickListener, View.OnLongClickListener {
 
     static final String TAG = MainActivity.class.getSimpleName();
 
-    public static boolean mIsPause = false;
-    public static final int YESTERDAY = 0, TODAY = 1;
-    private TextView mUseTimesTextView;
-    private Intent serviceIntent;
+    public static       boolean mIsPause  = false;
+    public static final int     YESTERDAY = 0, TODAY = 1;
+
+    public static Handler mUpdateTodayWordHandler;
+
     public static Word mTodayWord;
     private static Word mYesterdayWord;
+
+    private TextView      mUseTimesTextView;
+    private Intent        serviceIntent;
     private WordViewHoder mYesterdayWordViewHoder;
     private WordViewHoder mTodayWordViewHoder;
     private PullScrollView mScrollView;
-    private ImageView mHeadImg;
-    private ViewPager mMainViewPager;
+    private ImageView     mHeadImg;
+    private ViewPager     mMainViewPager;
     private PagerTitleStrip mPagerTitleStrip;
-    private ProgressBar mYesterdayProgressBar;
-    private ProgressBar mTodayProgressBar;
+    private ProgressBar   mYesterdayProgressBar;
+    private ProgressBar   mTodayProgressBar;
 
     private List<View> mViewList;
     private List<String> mTitleList;
 
-    private String mTimesSting;
+    private String  mTimesSting;
     private boolean mIsBound;
     private NotificatService.LocalBinder mLocalBinder;
     private NotificatService mNotificatService;
 
     private TextView mUserNameTextView;
     private String mUserName;
-
-    public static Handler mUpdateTodayWordHandler;
     private MySharedpreference mSharedpreference;
+    private View   mWordView;
 
     // bind activity and service
     public ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -184,7 +188,10 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
 
         final View viewYesterday = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_main, null);
         final View viewToday = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_main, null);
-
+        viewToday.setTag("today");
+        viewYesterday.setTag("yesterday");
+        viewToday.setOnLongClickListener(this);
+        viewYesterday.setOnLongClickListener(this);
         mYesterdayProgressBar = (ProgressBar) viewYesterday.findViewById(R.id.content_progressbar);
         mTodayProgressBar = (ProgressBar) viewToday.findViewById(R.id.content_progressbar);
 
@@ -202,29 +209,31 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
         mYesterdayWordViewHoder.setId(YESTERDAY);
         mTodayWordViewHoder.setId(TODAY);
 
-        mMainViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mMainViewPager.setOnPageChangeListener(
+                new ViewPager.OnPageChangeListener() {
 
-            int position;
+                    int position;
 
-            @Override
-            public void onPageScrolled(int i, float v, int i2) {
+                    @Override
+                    public void onPageScrolled(int i, float v, int i2) {
 
-            }
+                    }
 
-            @Override
-            public void onPageSelected(int i) {
-                position = i;
-            }
+                    @Override
+                    public void onPageSelected(int i) {
+                        position = i;
+                    }
 
-            @Override
-            public void onPageScrollStateChanged(int i) {
-                if (position == 0 && mYesterdayWord != null) {
-                    setWordViewContent(mYesterdayWordViewHoder, mYesterdayWord);
-                } else if (position == 1 && mTodayWord != null) {
-                    setWordViewContent(mTodayWordViewHoder, mTodayWord);
+                    @Override
+                    public void onPageScrollStateChanged(int i) {
+                        if (position == 0 && mYesterdayWord != null) {
+                            setWordViewContent(mYesterdayWordViewHoder, mYesterdayWord);
+                        } else if (position == 1 && mTodayWord != null) {
+                            setWordViewContent(mTodayWordViewHoder, mTodayWord);
+                        }
+                    }
                 }
-            }
-        });
+        );
 
         mMainViewPager.requestFocus();
         mMainViewPager.setFocusableInTouchMode(true);
@@ -280,6 +289,7 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
      * init the ViewHoder
      *
      * @param view the View that contain Word views.
+     *
      * @return WordViewHoder
      */
     private WordViewHoder getView(View view) {
@@ -329,18 +339,72 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
         InputFilter[] filters = {new InputFilter.LengthFilter(10)};
         editText.setFilters(filters);
         builder.setView(editText);
-        builder.setPositiveButton("确定~", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mSharedpreference.saveString("username", editText.getText().toString());
-                mUserNameTextView.setText(editText.getText().toString());
-            }
-        });
+        builder.setPositiveButton(
+                "确定~", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mSharedpreference.saveString("username", editText.getText().toString());
+                        mUserNameTextView.setText(editText.getText().toString());
+                    }
+                }
+        );
         builder.setNegativeButton("取消", null);
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
 
+    @Override
+    public boolean onLongClick(View v) {
+        final MaterialDialog materialDialog = new MaterialDialog(this);
+        materialDialog.setTitle("加入收藏?");
+        materialDialog.setMessage("点击确定可把此单词加入『我的收藏』");
+
+        String tag = (String) v.getTag();
+        if (tag.equals("today")) {
+            materialDialog.setNegativeButton(
+                    "取消",
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            materialDialog.dismiss();
+                        }
+                    }
+            );
+            materialDialog.setPositiveButton(
+                    "确定",
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ToastUtils.showShort("已加入收藏");
+                            materialDialog.dismiss();
+                        }
+                    }
+            );
+            materialDialog.show();
+        } else if (tag.equals("yesterday")) {
+            materialDialog.setNegativeButton(
+                    "取消",
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            materialDialog.dismiss();
+                        }
+                    }
+            );
+            materialDialog.setPositiveButton(
+                    "确定",
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ToastUtils.showShort("已加入收藏");
+                            materialDialog.dismiss();
+                        }
+                    }
+            );
+            materialDialog.show();
+        }
+        return false;
+    }
 
     class MainViewPagerAdapter extends PagerAdapter {
 
@@ -373,7 +437,8 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
 
     @Override
     public void onTurn() {
-
+        ToastUtils.showShort("刷新...");
+        onRefreshClick(null);
     }
 
     /**
@@ -388,8 +453,10 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
         data.writeInt(199);
         Parcel reply = Parcel.obtain();
         try {
-            mLocalBinder.transact(IBinder.LAST_CALL_TRANSACTION, data,
-                    reply, 0);
+            mLocalBinder.transact(
+                    IBinder.LAST_CALL_TRANSACTION, data,
+                    reply, 0
+            );
         } catch (RemoteException e) {
             e.printStackTrace();
         }

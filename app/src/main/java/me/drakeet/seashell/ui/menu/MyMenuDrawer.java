@@ -24,7 +24,7 @@ public abstract class MyMenuDrawer extends FragmentActivity implements MenuAdapt
     protected MenuDrawer mMenuDrawer;
 
     protected MenuAdapter mAdapter;
-    protected ListView mList;
+    protected ListView    mList;
 
     private int mActivePosition = 0;
     private int width;

@@ -12,6 +12,7 @@ import me.drakeet.seashell.utils.MySharedpreference;
 import me.drakeet.seashell.R;
 import me.drakeet.seashell.model.Word;
 import me.drakeet.seashell.utils.TaskUtils;
+import me.drakeet.seashell.utils.ToastUtils;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -69,13 +70,18 @@ public class NotificatService extends Service {
                             @Override
                             protected Object doInBackground(Object... params) {
                                 startNotification();
+                                try {
+                                    Thread.sleep(1500);//更新太快用户难以接受= =
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                                 return null;
                             }
 
                             @Override
-                            protected void onPreExecute() {
-                                super.onPreExecute();
-                                Toast.makeText(getApplicationContext(), "更新完成", Toast.LENGTH_SHORT).show();
+                            protected void onPostExecute(Object o) {
+                                super.onPostExecute(o);
+                                ToastUtils.showLong("刷新完成，若单词没有变化，则说明是最新单词^ ^");
                                 reply.writeInt(200);
                             }
                         }

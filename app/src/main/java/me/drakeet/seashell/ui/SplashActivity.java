@@ -46,12 +46,14 @@ public class SplashActivity extends Activity {
             e.printStackTrace();
         }
 
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
-                SplashActivity.this.startActivity(mainIntent);
-                SplashActivity.this.finish();
-            }
-        }, 1000); //1900 for release
+        new Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
+                        SplashActivity.this.startActivity(mainIntent);
+                        SplashActivity.this.finish();
+                    }
+                }, 1000
+        ); //1900 for release
     }
 }

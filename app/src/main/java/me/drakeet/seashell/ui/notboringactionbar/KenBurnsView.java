@@ -24,14 +24,14 @@ public class KenBurnsView extends FrameLayout {
 
     private static final String TAG = "KenBurnsView";
 
-    private final Handler mHandler;
-    private int[] mResourceIds;
-    private ImageView[] mImageViews;
+    private final Handler     mHandler;
+    private       int[]       mResourceIds;
+    private       ImageView[] mImageViews;
     private int mActiveImageIndex = -1;
 
-    private final Random random = new Random();
-    private int mSwapMs = 10000;
-    private int mFadeInOutMs = 400;
+    private final Random random       = new Random();
+    private       int    mSwapMs      = 10000;
+    private       int    mFadeInOutMs = 400;
 
     private float maxScaleFactor = 1.5F;
     private float minScaleFactor = 1.2F;

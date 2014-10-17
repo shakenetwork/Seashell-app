@@ -13,13 +13,14 @@ import me.drakeet.seashell.model.Word;
 
 public class MySharedpreference {
 
-    private Context context;
+    private Context           context;
     private SharedPreferences sharedPreferences;
 
     public MySharedpreference(Context context) {
         this.context = context;
         sharedPreferences = context.getSharedPreferences(
-                "userinfo", Context.MODE_PRIVATE);
+                "userinfo", Context.MODE_PRIVATE
+        );
     }
 
     public boolean saveString(String key, String value) {
@@ -59,6 +60,7 @@ public class MySharedpreference {
      * Set the honor, it is the number of notify count.
      *
      * @param honor count
+     *
      * @return true is successful
      */
     public boolean saveHonor(int honor) {
