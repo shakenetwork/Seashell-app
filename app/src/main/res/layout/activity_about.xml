@@ -119,6 +119,18 @@
             android:lineSpacingMultiplier="1.4"
             android:textColor="@color/lite_text_color"
             android:text="@string/about_declaration"
+            android:layout_below="@+id/textView7"
+            android:layout_alignLeft="@+id/textView7"
+            android:layout_alignStart="@+id/textView7"/>
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:textColor="@color/lite_text_color"
+            android:text="贝壳单词访谈及其理念：\nhttp://www.wandoujia.com/award/blog/me.drakeet.seashell"
+            android:layout_marginTop="@dimen/about_line_marginTop"
             android:layout_below="@+id/textView3"
             android:layout_alignLeft="@+id/textView3"
             android:layout_alignStart="@+id/textView3"/>

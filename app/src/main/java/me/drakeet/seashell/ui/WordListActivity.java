@@ -1,17 +1,25 @@
 package me.drakeet.seashell.ui;
 
 import android.app.ActionBar;
+import android.content.Context;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import org.litepal.crud.DataSupport;
 
@@ -19,10 +27,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import me.drakeet.materialdialog.MaterialDialog;
 import me.drakeet.seashell.R;
+import me.drakeet.seashell.model.FavoriteWord;
 import me.drakeet.seashell.model.Word;
 import me.drakeet.seashell.ui.notboringactionbar.AlphaForegroundColorSpan;
 import me.drakeet.seashell.ui.notboringactionbar.KenBurnsView;
+import me.drakeet.seashell.utils.ToastUtils;
 
 /**
  * Changed by drakeet on 9/18/2014.
@@ -74,17 +85,73 @@ public class WordListActivity extends BaseActivity {
         setupListView();
     }
 
+    List<FavoriteWord> wordList = null;
+
     private void setupListView() {
-        List<Word> wordList = DataSupport.findAll(Word.class);
+        String title = getIntent().getStringExtra("title");
+        System.out.println("-->" + title);
         ArrayList<String> tData = new ArrayList<String>();
-        for (Word word : wordList) {
-            tData.add(word.getWord() + " " + word.getSpeech() + " " + word.getExplanation());
+        if (title.equals("已背单词")) {
+            List<Word> wordList0 = DataSupport.findAll(Word.class);
+            for (Word word : wordList0) {
+                tData.add(word.getWord() + " " + word.getSpeech() + " " + word.getExplanation());
+            }
+            Collections.reverse(tData);
+        } else if (title.equals("我的收藏")) {
+            wordList = DataSupport.findAll(FavoriteWord.class);
+            for (FavoriteWord word : wordList) {
+                tData.add(word.getWord() + " " + word.getSpeech() + " " + word.getExplanation());
+            }
+            Collections.reverse(tData);
         }
-        Collections.reverse(tData);
 
         mPlaceHolderView = getLayoutInflater().inflate(R.layout.view_header_placeholder, mListView, false);
         mListView.addHeaderView(mPlaceHolderView);
-        mListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, tData));
+        final MyAdapter ma = new MyAdapter(this, wordList);
+        if (title.equals("已背单词")) {
+            mListView.setAdapter(new ArrayAdapter<String>(this, R.layout.item_wordlist, tData));
+        } else {
+            Collections.reverse(wordList);
+            mListView.setAdapter(ma);
+        }
+        final List<FavoriteWord> finalWordList = wordList;
+        mListView.setOnItemLongClickListener(
+                new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+
+
+                        final MaterialDialog m = new MaterialDialog(WordListActivity.this);
+                        m.setTitle("删除 " + finalWordList.get(position - 1).getWord() + "?");
+                        m.setMessage("点击确定将删除此单词");
+
+                        m.setNegativeButton(
+                                "取消",
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        m.dismiss();
+                                    }
+                                }
+                        );
+                        m.setPositiveButton(
+                                "确定",
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        ToastUtils.showShort("已删除");
+                                        DataSupport.delete(FavoriteWord.class, finalWordList.get(position - 1).getId());
+                                        wordList.remove(position - 1);
+                                        ma.notifyDataSetChanged();
+                                        m.dismiss();
+                                    }
+                                }
+                        );
+                        m.show();
+                        return false;
+                    }
+                }
+        );
         mListView.setOnScrollListener(
                 new AbsListView.OnScrollListener() {
                     @Override
@@ -112,7 +179,11 @@ public class WordListActivity extends BaseActivity {
     private void setTitleAlpha(float alpha) {
         mAlphaForegroundColorSpan.setAlpha(alpha);
         mSpannableString.setSpan(mAlphaForegroundColorSpan, 0, mSpannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        getActionBar().setTitle(mSpannableString);
+        //getActionBar().setTitle(mSpannableString);
+        String title = getIntent().getStringExtra("title");
+        getActionBar().setTitle(title);
+        //TextView titleTextView = (TextView) findViewById(R.id.tv_title);
+        //titleTextView.setText(title);
     }
 
     public static float clamp(float value, float max, float min) {
@@ -161,7 +232,6 @@ public class WordListActivity extends BaseActivity {
 
         actionBar.setIcon(R.drawable.ic_transparent);
 
-
         //getActionBarTitleView().setAlpha(0f);
     }
 
@@ -181,5 +251,46 @@ public class WordListActivity extends BaseActivity {
         getTheme().resolveAttribute(android.R.attr.actionBarSize, mTypedValue, true);
         mActionBarHeight = TypedValue.complexToDimensionPixelSize(mTypedValue.data, getResources().getDisplayMetrics());
         return mActionBarHeight;
+    }
+
+    private class MyAdapter extends BaseAdapter {
+
+        Context            mContext;
+        List<FavoriteWord> mList;
+
+        public MyAdapter(Context context, List<FavoriteWord> wordList) {
+            this.mContext = context;
+            this.mList = wordList;
+        }
+
+        @Override
+        public int getCount() {
+            return mList.size();
+        }
+
+        @Override
+        public FavoriteWord getItem(int position) {
+            return mList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            FavoriteWord fw = getItem(position);
+            if (convertView == null) {
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_wordlist, null);
+                TextView tv = (TextView) convertView;
+                tv.setText((fw.getWord() + " " + fw.getSpeech() + " " + fw.getExplanation()));
+                convertView.setTag(tv);
+            } else {
+                TextView tv = (TextView) convertView.getTag();
+                tv.setText((fw.getWord() + " " + fw.getSpeech() + " " + fw.getExplanation()));
+            }
+            return convertView;
+        }
     }
 }

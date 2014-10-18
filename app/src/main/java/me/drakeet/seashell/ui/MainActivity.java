@@ -33,11 +33,14 @@ import com.lurencun.cfuture09.androidkit.utils.ui.ExitDoubleClick;
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
 
+import org.litepal.crud.DataSupport;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import me.drakeet.materialdialog.MaterialDialog;
+import me.drakeet.seashell.model.FavoriteWord;
 import me.drakeet.seashell.model.Word;
 import me.drakeet.seashell.service.NotificatService;
 import me.drakeet.seashell.ui.menu.MyMenuDrawer;
@@ -63,29 +66,29 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
     public static Word mTodayWord;
     private static Word mYesterdayWord;
 
-    private TextView      mUseTimesTextView;
-    private Intent        serviceIntent;
-    private WordViewHoder mYesterdayWordViewHoder;
-    private WordViewHoder mTodayWordViewHoder;
+    private TextView       mUseTimesTextView;
+    private Intent         serviceIntent;
+    private WordViewHoder  mYesterdayWordViewHoder;
+    private WordViewHoder  mTodayWordViewHoder;
     private PullScrollView mScrollView;
-    private ImageView     mHeadImg;
-    private ViewPager     mMainViewPager;
+    private ImageView      mHeadImg;
+    private ViewPager      mMainViewPager;
     private PagerTitleStrip mPagerTitleStrip;
-    private ProgressBar   mYesterdayProgressBar;
-    private ProgressBar   mTodayProgressBar;
+    private ProgressBar    mYesterdayProgressBar;
+    private ProgressBar    mTodayProgressBar;
 
     private List<View> mViewList;
     private List<String> mTitleList;
 
-    private String  mTimesSting;
-    private boolean mIsBound;
+    private String           mTimesSting;
+    private boolean          mIsBound;
     private NotificatService.LocalBinder mLocalBinder;
     private NotificatService mNotificatService;
 
     private TextView mUserNameTextView;
-    private String mUserName;
+    private String   mUserName;
     private MySharedpreference mSharedpreference;
-    private View   mWordView;
+    private View     mWordView;
 
     // bind activity and service
     public ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -377,6 +380,8 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
                         public void onClick(View v) {
                             ToastUtils.showShort("已加入收藏");
                             materialDialog.dismiss();
+                            FavoriteWord favoriteWord = new FavoriteWord(mTodayWord);
+                            favoriteWord.save();
                         }
                     }
             );
@@ -398,6 +403,8 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
                         public void onClick(View v) {
                             ToastUtils.showShort("已加入收藏");
                             materialDialog.dismiss();
+                            FavoriteWord favoriteWord = new FavoriteWord(mYesterdayWord);
+                            favoriteWord.save();
                         }
                     }
             );
@@ -405,6 +412,7 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
         }
         return false;
     }
+
 
     class MainViewPagerAdapter extends PagerAdapter {
 
@@ -505,7 +513,13 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
             Intent intent = new Intent(MainActivity.this, AboutActivity.class);
             startActivity(intent);
         } else if (title.equals("已背单词")) {
-            startActivity(new Intent(MainActivity.this, WordListActivity.class));
+            Intent intent = new Intent(MainActivity.this, WordListActivity.class);
+            intent.putExtra("title", "已背单词");
+            startActivity(intent);
+        } else if (title.equals("我的收藏")) {
+            Intent intent = new Intent(MainActivity.this, WordListActivity.class);
+            intent.putExtra("title", "我的收藏");
+            startActivity(intent);
         } else if (title.equals("设置")) {
             startActivity(new Intent(MainActivity.this, SettingActivity.class));
         } else if (title.equals(mUserName) || title.equals("注册/登录")) {
