@@ -25,24 +25,29 @@ public class NotificationUtils {
         Random random = new Random();
         int i = random.nextInt((int) SystemClock.uptimeMillis());
 
-        NotificationCompat.Builder notifyBuilder;
-        notifyBuilder = new NotificationCompat.Builder(
-                context
-        );
-        notifyBuilder.setSmallIcon(R.drawable.ic_launcher);
-        // 初始化
-        notifyBuilder.setContentTitle("未联网");
-        notifyBuilder.setContentText("请尝试联网后重启程序...");
-        MySharedpreference mySharedpreference = new MySharedpreference(context);
-        boolean isWithPhonetic = mySharedpreference.getBoolean(context.getString(R.string.notify_with_phonetic));
+        NotificationCompat.Builder notifyBuilder =
+            new NotificationCompat.Builder(context)
+            .setSmallIcon(R.drawable.ic_launcher)
+            .setContentTitle("未联网")
+            .setContentText("请尝试联网后重启程序...");
+
+        NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
+        // Moves the big view style object into the notification object.
+        notifyBuilder.setStyle(bigTextStyle);
+
+        MySharedpreference mPrefs = new MySharedpreference(context);
+        boolean isWithPhonetic = mPrefs.getBoolean(context.getString(R.string.notify_with_phonetic));
         if (word != null) {
             if (isWithPhonetic)
                 notifyBuilder.setContentTitle(word.getWord() + " " + word.getPhonetic());
             else
                 notifyBuilder.setContentTitle(word.getWord());
             notifyBuilder.setContentText(word.getSpeech() + " " + word.getExplanation());
+            // init big view content
+            bigTextStyle.bigText(word.getSpeech() + " " + word.getExplanation()
+                    + "\n" + word.getExample());
         }
-        // 这里用来显示右下角的数字
+        // 这里用来显示更新时间
         notifyBuilder.setWhen(System.currentTimeMillis());
         Intent notifyIntent = new Intent(context, MainActivity.class);
         notifyIntent.putExtra("is_from_notification", true);
@@ -64,5 +69,4 @@ public class NotificationUtils {
         int NOTIFY_ID = 524947901;
         mNotificationManager.notify(NOTIFY_ID, notification);
     }
-
 }

@@ -11,6 +11,7 @@ import me.drakeet.seashell.utils.HttpDownloader;
 import me.drakeet.seashell.utils.MySharedpreference;
 import me.drakeet.seashell.R;
 import me.drakeet.seashell.model.Word;
+import me.drakeet.seashell.utils.NotificationUtils;
 import me.drakeet.seashell.utils.TaskUtils;
 import me.drakeet.seashell.utils.ToastUtils;
 
@@ -162,7 +163,7 @@ public class NotificatService extends Service {
         mWord = new Word();
         Gson gson = new Gson();
         mWord = gson.fromJson(mTodayGsonString, Word.class);
-        showWordInNotificationBar(mWord);
+        NotificationUtils.showWordInNotificationBar(this, mWord);
 
         if (mWord != null) {
             Message message = Message.obtain();
@@ -182,50 +183,6 @@ public class NotificatService extends Service {
 
         if (MainActivity.mTodayWord != null)
             MainActivity.mTodayWord = mWord;
-    }
-
-    private void showWordInNotificationBar(Word word) {
-        Random random = new Random();
-        int i = random.nextInt((int) SystemClock.uptimeMillis());
-
-        NotificationCompat.Builder notifyBuilder;
-        notifyBuilder = new NotificationCompat.Builder(
-                this
-        );
-        notifyBuilder.setSmallIcon(R.drawable.ic_launcher);
-        // 初始化
-        notifyBuilder.setContentTitle("未联网");
-        notifyBuilder.setContentText("请尝试联网后重启程序...");
-        MySharedpreference mySharedpreference = new MySharedpreference(this);
-        boolean isWithPhonetic = mySharedpreference.getBoolean(getString(R.string.notify_with_phonetic));
-        if (word != null) {
-            if (isWithPhonetic)
-                notifyBuilder.setContentTitle(word.getWord() + " " + word.getPhonetic());
-            else
-                notifyBuilder.setContentTitle(word.getWord());
-            notifyBuilder.setContentText(word.getSpeech() + " " + word.getExplanation());
-        }
-        // 这里用来显示右下角的数字
-        notifyBuilder.setWhen(System.currentTimeMillis());
-        Intent notifyIntent = new Intent(this, MainActivity.class);
-        notifyIntent.putExtra("is_from_notification", true);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addNextIntent(notifyIntent);
-        // 给notification设置一个独一无二的requestCode
-        int requestCode = (int) SystemClock.uptimeMillis();
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(
-                requestCode, PendingIntent.FLAG_UPDATE_CURRENT
-        );
-        notifyBuilder.setContentIntent(resultPendingIntent);
-        notifyBuilder.setPriority(NotificationCompat.PRIORITY_MIN);
-        notifyBuilder.setOngoing(true);
-        long[] vibrate = {0, 50, 0, 0};
-        notifyBuilder.setVibrate(vibrate);
-
-        Notification notification = notifyBuilder.build();
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        int NOTIFY_ID = 524947901;
-        mNotificationManager.notify(NOTIFY_ID, notification);
     }
 
     @Override
