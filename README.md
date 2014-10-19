@@ -29,8 +29,8 @@
 ## App store:
 
 豌豆荚设计奖及更多理念：http://www.wandoujia.com/award/blog/me.drakeet.seashell
-小米：http://app.mi.com/detail/65475
-360：http://zhushou.360.cn/detail/index/soft_id/1814521
+
+小米：http://app.mi.com/detail/65475  360：http://zhushou.360.cn/detail/index/soft_id/1814521
 
 
 我的博客：http://drakeet.me
