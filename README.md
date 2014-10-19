@@ -1,3 +1,13 @@
+## 最新更新内容：
+1. 修复 刷新问题，并新增下拉刷新；
+2. 修复 一些小纰漏；
+3. 新增 长按单词可以加入收藏（考虑到美观的原因，所以目前暂时这样）；
+4. 新增 『我的收藏』页面，可浏览收藏单词也可以长按删除单词；
+5. 新增 人性化的自由开关，可自由设置是否在通知栏显示音标；
+6. 新增 当贝壳消息处在最顶上的时候，会自动展开成大的 View 显示例句和解释，效果很棒！（感谢[Robert Liu](https://github.com/lsanotes)的贡献）
+
+另外，还有很多新提出的设计想法和任务，非常欢迎有人能一起参与，见这个 issue：https://github.com/drakeet/Seashell-app/issues/1
+
 
 ## 前言
 这个app是我在大二下学期考试期间背单词的时候突发奇想，并花了大概4天的时间做出来的，所以有很多地方可能写得不好，或者很多功能点没有写完，考虑到目前还有另外一些项目特别忙，于是将这个项目开源了，逻辑很简单，代码也不多，但对于 Android 初学者能够快速学习到几项比较基本常用的开发知识(●'◡'●)ﾉ♥ 我在最近也进行了一些更新，特别欢迎和希望能够有人和我一起来学习以及有空完善它^ ^
@@ -18,8 +28,10 @@
 
 ## App store:
 
+豌豆荚设计奖及更多理念：http://www.wandoujia.com/award/blog/me.drakeet.seashell
 小米：http://app.mi.com/detail/65475
 360：http://zhushou.360.cn/detail/index/soft_id/1814521
+
 
 我的博客：http://drakeet.me
 
@@ -42,6 +54,7 @@
 * flavienlaurent / NotBoringActionBar : 已背单词页面
 * msdx / androidkit : 目前只用于双击退出
 * Google / Gson
+* drakeet / MaterialDialog Material Design 对话框兼容库
 
 （我会再找时间梳理一下代码，并且在`README.md`中写明代码结构和各项逻辑关系^ ^）
 
