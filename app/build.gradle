@@ -8,8 +8,8 @@ android {
         applicationId "me.drakeet.seashell"
         minSdkVersion 14
         targetSdkVersion 20
-        versionCode 33
-        versionName "1.3.3"
+        versionCode 34
+        versionName "1.3.4"
     }
     buildTypes {
         release {

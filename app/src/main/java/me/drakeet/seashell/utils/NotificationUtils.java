@@ -27,7 +27,7 @@ public class NotificationUtils {
 
         NotificationCompat.Builder notifyBuilder =
             new NotificationCompat.Builder(context)
-            .setSmallIcon(R.drawable.ic_launcher)
+                    .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle("未联网")
             .setContentText("请尝试联网后重启程序...");
 

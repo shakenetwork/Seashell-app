@@ -48,9 +48,9 @@ public abstract class MyMenuDrawer extends FragmentActivity implements MenuAdapt
         MySharedpreference mySharedpreference = new MySharedpreference(this);
         String username = mySharedpreference.getString("username");
         if (username != null) {
-            items.add(new Item(username, R.drawable.avatar));
+            items.add(new Item(username, R.drawable.ic_notification));
         } else {
-            items.add(new Item("注册/登录", R.drawable.avatar));
+            items.add(new Item("注册/登录", R.drawable.ic_notification));
         }
         items.add(new Category("Cat 1"));
         items.add(new Item("我的收藏", R.drawable.toolbar_fav_icon_res));

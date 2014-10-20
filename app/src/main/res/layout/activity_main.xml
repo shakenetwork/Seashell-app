@@ -99,7 +99,7 @@
                     android:background="@android:color/white"
                     android:layout_marginLeft="21dp"
                     android:contentDescription="@null"
-                    android:src="@drawable/avt"/>
+                    android:src="@drawable/ic_launcher"/>
 
                 <TextView
                     android:id="@+id/user_name"

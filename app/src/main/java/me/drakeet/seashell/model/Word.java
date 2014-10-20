@@ -1,5 +1,7 @@
 package me.drakeet.seashell.model;
 
+import com.google.gson.Gson;
+
 import org.litepal.crud.DataSupport;
 
 /**
@@ -7,6 +9,7 @@ import org.litepal.crud.DataSupport;
  */
 public class Word extends DataSupport {
 
+    private int    id;
     private String word;
     private String phonetic;
     private String speech;
@@ -15,6 +18,10 @@ public class Word extends DataSupport {
 
     public long getId() {
         return this.getBaseObjId();
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getWord() {
@@ -57,14 +64,13 @@ public class Word extends DataSupport {
         this.example = example;
     }
 
-    @Override
-    public String toString() {
-        return "Word{" +
-                "word='" + word + '\'' +
-                ", phonetic='" + phonetic + '\'' +
-                ", speech='" + speech + '\'' +
-                ", explanation='" + explanation + '\'' +
-                ", example='" + example + '\'' +
-                '}';
+    public String toGson() {
+        return new Gson().toJson(this);
+    }
+
+    public static void main(String[] d) {
+        Word word1 = new Gson().fromJson("{\"word\":\"essence\",\"phonetic\":\"[ˈesns] \",\"speech\":\"n. \",\"explanation\":\"本质，实质；精髓\",\"example\":\"eg. The essence of flat, is super curved.\\n平坦的本质，是极致的曲面。 \\n\\n \"}", Word.class);
+        word1.setId(1);
+        System.out.printf("-->" + new Word().toGson());
     }
 }
