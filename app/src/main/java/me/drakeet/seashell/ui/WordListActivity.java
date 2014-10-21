@@ -115,43 +115,44 @@ public class WordListActivity extends BaseActivity {
             mListView.setAdapter(ma);
         }
         final List<FavoriteWord> finalWordList = wordList;
-        mListView.setOnItemLongClickListener(
-                new AdapterView.OnItemLongClickListener() {
-                    @Override
-                    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+        if (title.equals("我的收藏"))
+            mListView.setOnItemLongClickListener(
+                    new AdapterView.OnItemLongClickListener() {
+                        @Override
+                        public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 
 
-                        final MaterialDialog m = new MaterialDialog(WordListActivity.this);
-                        m.setTitle("删除 " + finalWordList.get(position - 1).getWord() + "?");
-                        m.setMessage("点击确定将删除此单词");
+                            final MaterialDialog m = new MaterialDialog(WordListActivity.this);
+                            m.setTitle("删除 " + finalWordList.get(position - 1).getWord() + "?");
+                            m.setMessage("点击确定将删除此单词");
 
-                        m.setNegativeButton(
-                                "取消",
-                                new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        m.dismiss();
+                            m.setNegativeButton(
+                                    "取消",
+                                    new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            m.dismiss();
+                                        }
                                     }
-                                }
-                        );
-                        m.setPositiveButton(
-                                "确定",
-                                new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        ToastUtils.showShort("已删除");
-                                        DataSupport.delete(FavoriteWord.class, finalWordList.get(position - 1).getId());
-                                        wordList.remove(position - 1);
-                                        ma.notifyDataSetChanged();
-                                        m.dismiss();
+                            );
+                            m.setPositiveButton(
+                                    "确定",
+                                    new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            ToastUtils.showShort("已删除");
+                                            DataSupport.delete(FavoriteWord.class, finalWordList.get(position - 1).getId());
+                                            wordList.remove(position - 1);
+                                            ma.notifyDataSetChanged();
+                                            m.dismiss();
+                                        }
                                     }
-                                }
-                        );
-                        m.show();
-                        return false;
+                            );
+                            m.show();
+                            return false;
+                        }
                     }
-                }
-        );
+            );
         mListView.setOnScrollListener(
                 new AbsListView.OnScrollListener() {
                     @Override

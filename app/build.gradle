@@ -23,5 +23,5 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'net.simonvt.menudrawer:menudrawer:3.0.+'
     //compile project(':libraries:materialdialog')
-    compile 'me.drakeet.materialdialog:library:1.0.4@aar'
+    compile 'me.drakeet.materialdialog:library:1.0.5'
 }
