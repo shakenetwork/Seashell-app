@@ -15,7 +15,7 @@ public class DateChangedReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         ToastUtils.showLong("单词改变啦~~");
-        Intent serviceIntent = new Intent(context, NotificatService.class);
+        // Intent serviceIntent = new Intent(context, NotificatService.class);
         // context.startService(serviceIntent);
         // 想到一种方式，在这边修改当前使用的 word id号，并标志『需要更新』，
         // 而 Service 那边不时检查一下是否『需要更新』，如果需要，根据 id 号去更新
