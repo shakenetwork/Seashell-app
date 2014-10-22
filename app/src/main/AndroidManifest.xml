@@ -49,6 +49,12 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".service.DateChangedReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.DATE_CHANGED"/>
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".ui.AboutActivity"
             android:label="@string/title_activity_about">

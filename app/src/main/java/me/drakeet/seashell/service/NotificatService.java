@@ -42,15 +42,20 @@ public class NotificatService extends Service {
 
     private Word mWord;
 
-    public static boolean isRun = false;
-    static long firstTime;
-    Thread thread;
+    public static boolean isRun      = false;
+    public static boolean hasNewWord = true;
+
     private volatile boolean stopRequested;
-    boolean isFirstTime = true;
+    private boolean isFirstTime = true;
+
+    private static long firstTime;
+
+    private Thread thread;
+
     private String mTodayGsonString;
     private String mYesterdayGsonString;
-    private       LocalBinder localBinder = new LocalBinder();
-    public static boolean     hasNewWord  = true;
+
+    private LocalBinder localBinder = new LocalBinder();
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -71,6 +76,7 @@ public class NotificatService extends Service {
                         new AsyncTask<Object, Object, Object>() {
                             @Override
                             protected Object doInBackground(Object... params) {
+                                // 去取下一个单词
                                 startNotification();
                                 return null;
                             }
@@ -90,7 +96,7 @@ public class NotificatService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
+        // startNotification();
         thread = new Thread(
                 new Runnable() {
 
@@ -113,7 +119,7 @@ public class NotificatService extends Service {
 
                             try {
                                 Log.i("Seashell-->", "onStartCommand is runing");
-                                Thread.sleep(120 * 1000);
+                                Thread.sleep(238 * 1000);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
@@ -167,6 +173,7 @@ public class NotificatService extends Service {
         mWord = new Word();
         Gson gson = new Gson();
         mWord = gson.fromJson(mTodayGsonString, Word.class);
+
         NotificationUtils.showWordInNotificationBar(this, mWord);
 
         if (mWord != null) {
@@ -185,6 +192,7 @@ public class NotificatService extends Service {
 
     @Override
     public void onDestroy() {
+        ToastUtils.showShort("service destroyed");
         stopRequested = true;
         thread.interrupt();
         isRun = false;
