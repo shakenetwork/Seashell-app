@@ -6,6 +6,7 @@ import java.util.Random;
 
 import com.google.gson.Gson;
 
+import me.drakeet.seashell.api.Api;
 import me.drakeet.seashell.ui.MainActivity;
 import me.drakeet.seashell.utils.HttpDownloader;
 import me.drakeet.seashell.utils.MySharedpreference;
@@ -71,11 +72,6 @@ public class NotificatService extends Service {
                             @Override
                             protected Object doInBackground(Object... params) {
                                 startNotification();
-                                try {
-                                    Thread.sleep(1500);//更新太快用户难以接受= =
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
                                 return null;
                             }
 
@@ -133,6 +129,7 @@ public class NotificatService extends Service {
     public void changeNewAndOldWord() {
         Context context = getApplicationContext();
         MySharedpreference sharedpreference = new MySharedpreference(context);
+
         Map map = sharedpreference.getWordJson();
         // 如果和最新的单词是一样的，就取消更新
         if (((String) map.get("today_json")).equals(mTodayGsonString)
@@ -143,6 +140,12 @@ public class NotificatService extends Service {
         if (mWord != null) {
             mWord.save();// save the new word to wordlist.db
         }
+
+        Map map2 = sharedpreference.getInfo();
+        int honor = (Integer) map2.get("honor");
+        honor++;
+        sharedpreference.saveHonor(honor);
+
         mYesterdayGsonString = (String) map.get("today_json"); // 将今天的存至昨天的
         sharedpreference.saveYesterdayJson(mYesterdayGsonString);
         sharedpreference.saveTodayJson(mTodayGsonString);
@@ -154,12 +157,13 @@ public class NotificatService extends Service {
         mTodayGsonString = httpDownloader.download(getString(R.string.api));
         if (mTodayGsonString == null || mTodayGsonString.isEmpty()) {
             try {
-                Thread.sleep(10 * 1000);
+                Thread.sleep(100 * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             mTodayGsonString = httpDownloader.download(getString(R.string.api));
         }
+        httpDownloader = null;
         mWord = new Word();
         Gson gson = new Gson();
         mWord = gson.fromJson(mTodayGsonString, Word.class);
@@ -172,14 +176,8 @@ public class NotificatService extends Service {
                 MainActivity.mUpdateTodayWordHandler.sendMessage(message);
         }
 
-        Context context = getApplicationContext();
-        MySharedpreference sharedpreference = new MySharedpreference(context);
-        Map map = sharedpreference.getInfo();
-        int honor = (Integer) map.get("honor");
-        honor++;
-        sharedpreference.saveHonor(honor);
+
         changeNewAndOldWord();// 更换单词
-        sharedpreference.saveTodayJson(mTodayGsonString);
 
         if (MainActivity.mTodayWord != null)
             MainActivity.mTodayWord = mWord;

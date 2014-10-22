@@ -59,7 +59,7 @@
                         android:paddingLeft="8dp"
                         android:paddingRight="8dp"
                         android:gravity="center_vertical"
-                        android:text="@string/add_attention"
+                        android:text="@string/button_next"
                         android:textSize="13sp"
                         android:textColor="#57AF4E"
                         android:clickable="true"

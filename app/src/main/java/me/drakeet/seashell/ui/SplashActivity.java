@@ -52,8 +52,8 @@ public class SplashActivity extends Activity {
                         Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
                         SplashActivity.this.startActivity(mainIntent);
                         SplashActivity.this.finish();
-            }
-                }, 1000
+                    }
+                }, 900
         ); //time for release
     }
 }

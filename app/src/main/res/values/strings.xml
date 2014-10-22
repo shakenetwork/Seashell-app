@@ -5,7 +5,7 @@
     <string name="action_back">返回</string>
     <string name="sample_bottommenu">Today:</string>
     <string name="pulldown_scrollview">PulldownScrollView</string>
-    <string name="add_attention">刷新</string>
+    <string name="button_next">换一个</string>
     <string name="user_post">已更新 0 次单词</string>
     <string name="user_look">详细浏览次数：0 次</string>
     <string name="user_name">未设置用户名</string>
