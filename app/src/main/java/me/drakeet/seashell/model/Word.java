@@ -68,6 +68,11 @@ public class Word extends DataSupport {
         return new Gson().toJson(this);
     }
 
+    @Override
+    public String toString() {
+        return toGson();
+    }
+
     public static void main(String[] d) {
         Word word1 = new Gson().fromJson("{\"word\":\"essence\",\"phonetic\":\"[ˈesns] \",\"speech\":\"n. \",\"explanation\":\"本质，实质；精髓\",\"example\":\"eg. The essence of flat, is super curved.\\n平坦的本质，是极致的曲面。 \\n\\n \"}", Word.class);
         word1.setId(1);

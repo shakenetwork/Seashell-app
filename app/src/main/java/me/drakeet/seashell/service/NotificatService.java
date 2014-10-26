@@ -170,6 +170,7 @@ public class NotificatService extends Service {
             mTodayGsonString = httpDownloader.download(getString(R.string.api));
         }
         httpDownloader = null;
+
         mWord = new Word();
         Gson gson = new Gson();
         mWord = gson.fromJson(mTodayGsonString, Word.class);
