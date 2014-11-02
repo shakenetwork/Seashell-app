@@ -23,6 +23,7 @@ import me.drakeet.seashell.utils.TaskUtils;
 import me.drakeet.seashell.widget.PullScrollView;
 
 /**
+ *
  * Created by drak11t on 7/12/2014.
  */
 public class SplashActivity extends Activity {
