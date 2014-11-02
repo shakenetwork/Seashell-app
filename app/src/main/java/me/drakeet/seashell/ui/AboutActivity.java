@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import me.drakeet.seashell.BuildConfig;
 import me.drakeet.seashell.R;
 
 /**
@@ -21,16 +22,9 @@ public class AboutActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-        //get the current version number
-        PackageManager pm = getPackageManager();
-        try {
-            PackageInfo pi = pm.getPackageInfo("me.drakeet.seashell", 0);
-
-            TextView versionNumber = (TextView) findViewById(R.id.versionNumber);
-            versionNumber.setText("当前版本  " + pi.versionName);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+        //Display the current version number
+        TextView versionNumber = (TextView) findViewById(R.id.versionNumber);
+        versionNumber.setText("Version " + BuildConfig.VERSION_NAME);
     }
 
     @Override
