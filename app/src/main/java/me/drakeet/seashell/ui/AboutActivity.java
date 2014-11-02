@@ -11,6 +11,7 @@ import android.widget.TextView;
 import me.drakeet.seashell.R;
 
 /**
+ *
  * Created by drakeet on 9/14/14.
  */
 public class AboutActivity extends BaseActivity {
