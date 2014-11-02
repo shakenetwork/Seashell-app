@@ -18,7 +18,7 @@
     <string name="my_open_source_link">源代码：https://github.com/drakeet/Seashell-app</string>
     <string name="my_email">联系：drakeet.me@gmail.com</string>
     <string name="my_name">作者：drakeet</string>
-    <string name="about_declaration">\n声明：贝壳单词使用的应用图标资源来自网络，\n\t\t\t\t 感谢原作者！若涉及侵权请联系我删除。</string>
+    <string name="about_declaration"></string>
     <string name="double_click_exit">再按一次返回键退出</string>
     <string name="api">http://test.drakeet.me/?key=seashell2</string>
     <string name="title_activity_setting">设置</string>
@@ -26,5 +26,6 @@
     <string name="my_favorite">我的收藏</string>
     <string name="xiaomi_attention"><![CDATA[小米系统用户请进入系统应用:安全中心->授权管理->自启动应用管理 后允许『贝壳单词』自启动，否则无法自启动]]></string>
     <string name="notify_with_phonetic">notify_with_phonetic</string>
+    <string name="current_word_id">current_word_id</string>
 
 </resources>

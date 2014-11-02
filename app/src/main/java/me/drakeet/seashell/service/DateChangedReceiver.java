@@ -3,7 +3,9 @@ package me.drakeet.seashell.service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.widget.Toast;
 
+import me.drakeet.seashell.utils.MySharedpreference;
 import me.drakeet.seashell.utils.ToastUtils;
 
 /**
@@ -14,7 +16,11 @@ import me.drakeet.seashell.utils.ToastUtils;
 public class DateChangedReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        ToastUtils.showLong("单词改变啦~~");
+        MySharedpreference mySharedpreference = new MySharedpreference(context);
+        int id1 = mySharedpreference.getCurrentWordId();
+        mySharedpreference.updateWordId();
+        int id2 = mySharedpreference.getCurrentWordId();
+        ToastUtils.showShort("" + id1 + "-" + id2);
         // Intent serviceIntent = new Intent(context, NotificatService.class);
         // context.startService(serviceIntent);
         // 想到一种方式，在这边修改当前使用的 word id号，并标志『需要更新』，
