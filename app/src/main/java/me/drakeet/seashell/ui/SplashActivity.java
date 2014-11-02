@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import org.litepal.tablemanager.Connector;
 
+import me.drakeet.seashell.BuildConfig;
 import me.drakeet.seashell.R;
 import me.drakeet.seashell.widget.PullScrollView;
 
@@ -35,16 +36,8 @@ public class SplashActivity extends Activity {
         getWindowManager().getDefaultDisplay().getMetrics(metric);
         PullScrollView.mWidth = (int) (metric.widthPixels / 2); // 获取屏幕宽度（像素）
 
-        //Display the current version number
-        PackageManager pm = getPackageManager();
-        try {
-            PackageInfo pi = pm.getPackageInfo("me.drakeet.seashell", 0);
-
-            TextView versionNumber = (TextView) findViewById(R.id.versionNumber);
-            versionNumber.setText("Version " + pi.versionName);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+        TextView versionNumber = (TextView) findViewById(R.id.versionNumber);
+        versionNumber.setText(BuildConfig.VERSION_NAME);
 
         new Handler().postDelayed(
                 new Runnable() {
