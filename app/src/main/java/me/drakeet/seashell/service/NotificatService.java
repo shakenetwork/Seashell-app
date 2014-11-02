@@ -24,8 +24,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Message;
 import android.os.Parcel;
 import android.os.RemoteException;
@@ -55,7 +57,17 @@ public class NotificatService extends Service {
     private String mTodayGsonString;
     private String mYesterdayGsonString;
 
+    private MySharedpreference mSharedpreference;
+
     private LocalBinder localBinder = new LocalBinder();
+
+    private int mChangeWordTime;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mSharedpreference = new MySharedpreference(this);
+    }
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -68,28 +80,37 @@ public class NotificatService extends Service {
         }
 
         @Override
-        protected boolean onTransact(int code, Parcel data, final Parcel reply,
+        protected boolean onTransact(int code, final Parcel data, final Parcel reply,
                                      int flags) throws RemoteException {
             //表示从activity中获取数值
-            if (data.readInt() == 199) {
-                TaskUtils.executeAsyncTask(
-                        new AsyncTask<Object, Object, Object>() {
-                            @Override
-                            protected Object doInBackground(Object... params) {
-                                // 去取下一个单词
-                                startNotification();
-                                return null;
-                            }
+            TaskUtils.executeAsyncTask(
+                    new AsyncTask<Object, Object, Object>() {
+                        boolean change;
 
-                            @Override
-                            protected void onPostExecute(Object o) {
-                                super.onPostExecute(o);
-                                ToastUtils.showLong("刷新完成，若单词没有变化，则说明是最新单词^ ^");
-                                reply.writeInt(200);
-                            }
+                        @Override
+                        protected Object doInBackground(Object... params) {
+                            mChangeWordTime = data.readInt();
+                            Bundle bundle = data.readBundle();
+                            change = bundle.getBoolean("change");
+                            startNotification();
+                            return null;
                         }
-                );
-            }
+
+                        @Override
+                        protected void onPostExecute(Object o) {
+                            super.onPostExecute(o);
+                            if (mChangeWordTime > 0) {
+                                if (change)
+                                    ToastUtils.showLong("更换成功:)");
+                                else
+                                    ToastUtils.showShort("刷新成功:)");
+                            } else {
+                                ToastUtils.showShort("请不要短时间内一直更换");
+                            }
+                            reply.writeInt(200);
+                        }
+                    }
+            );
             return super.onTransact(code, data, reply, flags);
         }
     }
@@ -133,10 +154,7 @@ public class NotificatService extends Service {
     }
 
     public void changeNewAndOldWord() {
-        Context context = getApplicationContext();
-        MySharedpreference sharedpreference = new MySharedpreference(context);
-
-        Map map = sharedpreference.getWordJson();
+        Map map = mSharedpreference.getWordJson();
         // 如果和最新的单词是一样的，就取消更新
         if (((String) map.get("today_json")).equals(mTodayGsonString)
                 || mTodayGsonString == null
@@ -147,33 +165,48 @@ public class NotificatService extends Service {
             mWord.save();// save the new word to wordlist.db
         }
 
-        Map map2 = sharedpreference.getInfo();
+        Map map2 = mSharedpreference.getInfo();
         int honor = (Integer) map2.get("honor");
         honor++;
-        sharedpreference.saveHonor(honor);
+        mSharedpreference.saveHonor(honor);
 
         mYesterdayGsonString = (String) map.get("today_json"); // 将今天的存至昨天的
-        sharedpreference.saveYesterdayJson(mYesterdayGsonString);
-        sharedpreference.saveTodayJson(mTodayGsonString);
+        mSharedpreference.saveYesterdayJson(mYesterdayGsonString);
+        mSharedpreference.saveTodayJson(mTodayGsonString);
         hasNewWord = true;
     }
 
-    public void startNotification() {
+    private int getCurrentWordId() {
+        return mSharedpreference.getCurrentWordId();
+    }
+
+    private String getDownloadString() {
         HttpDownloader httpDownloader = new HttpDownloader();
-        mTodayGsonString = httpDownloader.download(getString(R.string.api));
+        return httpDownloader.download(String.format(Api.GET_WORD, getCurrentWordId()));
+//        return httpDownloader.download(getString(R.string.api));
+    }
+
+    public void startNotification() {
+        mTodayGsonString = getDownloadString();
         if (mTodayGsonString == null || mTodayGsonString.isEmpty()) {
             try {
                 Thread.sleep(100 * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            mTodayGsonString = httpDownloader.download(getString(R.string.api));
+            mTodayGsonString = getDownloadString();
         }
-        httpDownloader = null;
-
-        mWord = new Word();
-        Gson gson = new Gson();
-        mWord = gson.fromJson(mTodayGsonString, Word.class);
+        try {
+            mWord = new Word();
+            Gson gson = new Gson();
+            mWord = gson.fromJson(mTodayGsonString, Word.class);
+        } catch (Exception e) {
+            int id = getCurrentWordId();
+            id -= 3;
+            if (id < 6)
+                id = 6;
+            mSharedpreference.setCurrentWordId(id);
+        }
 
         NotificationUtils.showWordInNotificationBar(this, mWord);
 

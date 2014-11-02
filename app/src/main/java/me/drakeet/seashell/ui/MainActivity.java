@@ -33,8 +33,6 @@ import com.lurencun.cfuture09.androidkit.utils.ui.ExitDoubleClick;
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
 
-import org.litepal.crud.DataSupport;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +54,8 @@ import me.drakeet.seashell.R;
  */
 public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnListener, View.OnClickListener, View.OnLongClickListener {
 
-    static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG  = MainActivity.class.getSimpleName();
+    public static final  String NOTE = "NOTE";
 
     public static       boolean mIsPause  = false;
     public static final int     YESTERDAY = 0, TODAY = 1;
@@ -81,6 +80,7 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
     private List<String> mTitleList;
 
     private String           mTimesSting;
+    private String           mNoteString;
     private boolean          mIsBound;
     private NotificatService.LocalBinder mLocalBinder;
     private NotificatService mNotificatService;
@@ -89,6 +89,8 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
     private String   mUserName;
     private MySharedpreference mSharedpreference;
     private View     mWordView;
+
+    private int mChangeWordTimes = 3;
 
     // bind activity and service
     public ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -124,6 +126,8 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
         serviceIntent = new Intent(this, NotificatService.class);
         startService(serviceIntent);
         bindService(serviceIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+
+        mNoteString = getIntent().getStringExtra(NOTE);
     }
 
     private void updataLookCount(Boolean isPlus) {
@@ -146,6 +150,7 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
             updataLookCount(true);
             getIntent().putExtra("is_from_notification", false);
         }
+        mChangeWordTimes = 3;
     }
 
     @Override
@@ -182,6 +187,11 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
         mMainViewPager = (ViewPager) findViewById(R.id.viewpage_main);
         mPagerTitleStrip = (PagerTitleStrip) findViewById(R.id.pager_title_strip_main);
         mUserNameTextView = (TextView) findViewById(R.id.user_name);
+        TextView noteTextView = (TextView) findViewById(R.id.tv_note);
+        if (mNoteString != null) {
+            noteTextView.setText(mNoteString);
+            noteTextView.setSelected(true);
+        }
         mUserNameTextView.setOnClickListener(this);
         mUserName = mSharedpreference.getString("username");
         if (mUserName != null) {
@@ -253,16 +263,21 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
      */
     public void setWordViewContent(WordViewHoder wordViewHoder, Word word) {
         initWord();
-        wordViewHoder.wordTextView.setText(word.getWord());
-        wordViewHoder.phoneticTextView.setText(word.getPhonetic());
-        wordViewHoder.speechTextView.setText(word.getSpeech());
-        wordViewHoder.explanationTextView.setText(word.getExplanation());
+        try {
+            wordViewHoder.wordTextView.setText(word.getWord());
+            wordViewHoder.phoneticTextView.setText(word.getPhonetic());
+            wordViewHoder.speechTextView.setText(word.getSpeech());
+            wordViewHoder.explanationTextView.setText(word.getExplanation());
 
-        wordViewHoder.exampleTextView.setText(Html.fromHtml(boldWordParser(word.getWord().trim(), word.getExample().trim())));
-        if (wordViewHoder.getId() == YESTERDAY)
-            mYesterdayProgressBar.setVisibility(View.INVISIBLE);
-        else
-            mTodayProgressBar.setVisibility(View.INVISIBLE);
+            wordViewHoder.exampleTextView.setText(Html.fromHtml(boldWordParser(word.getWord().trim(), word.getExample().trim())));
+            if (wordViewHoder.getId() == YESTERDAY)
+                mYesterdayProgressBar.setVisibility(View.INVISIBLE);
+            else
+                mTodayProgressBar.setVisibility(View.INVISIBLE);
+        } catch (NullPointerException e) {
+            ToastUtils.showShort("ID为" + mSharedpreference.getCurrentWordId() + "单词获取失败");
+            onChangeOneClick(null);
+        }
     }
 
     private String boldWordParser(String word, String example) {
@@ -309,18 +324,24 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
      * init the word data from sharedpreference
      */
     private void initWord() {
-        Map<String, String> map;
-        Gson gson = new Gson();
-        map = mSharedpreference.getWordJson();
-        //取出
-        String todayGsonString = map.get("today_json");
-        String yesterdayGsonString = map.get("yesterday_json");
-        mTodayWord = gson.fromJson(todayGsonString, Word.class);
-        mYesterdayWord = gson.fromJson(yesterdayGsonString, Word.class);
-        //TODO
-        Map<String, Object> map2;
-        map2 = mSharedpreference.getInfo();
-        mTimesSting = "已更新 " + map2.get("honor") + " 次单词";
+        try {
+            Map<String, String> map;
+            Gson gson = new Gson();
+            map = mSharedpreference.getWordJson();
+            //取出
+            String todayGsonString = map.get("today_json");
+            String yesterdayGsonString = map.get("yesterday_json");
+            mTodayWord = gson.fromJson(todayGsonString, Word.class);
+            mYesterdayWord = gson.fromJson(yesterdayGsonString, Word.class);
+            //TODO
+            Map<String, Object> map2;
+            map2 = mSharedpreference.getInfo();
+            mTimesSting = "已更新 " + map2.get("honor") + " 次单词";
+        } catch (Exception e) {
+            e.printStackTrace();
+            mSharedpreference.saveTodayJson("");
+            mSharedpreference.saveYesterdayJson("");
+        }
     }
 
     @Override
@@ -443,23 +464,16 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
         }
     }
 
-    @Override
-    public void onTurn() {
-        ToastUtils.showShort("刷新...");
-        onRefreshClick(null);
-    }
-
-    /**
-     * on refesh button click.
-     *
-     * @param view
-     */
-    public void onRefreshClick(View view) {
+    private void onRefresh(boolean change) {
         // 往Service中传递值的对象，到Service中去处理
         mTodayProgressBar.setVisibility(View.VISIBLE);
         Parcel data = Parcel.obtain();
-        data.writeInt(199);
+        data.writeInt(mChangeWordTimes);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("change", change);
+        data.writeBundle(bundle);
         Parcel reply = Parcel.obtain();
+
         try {
             mLocalBinder.transact(
                     IBinder.LAST_CALL_TRANSACTION, data,
@@ -468,13 +482,25 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+    }
 
-        if (reply.readInt() == 200) {
-            Message message = Message.obtain();
-            message.obj = mTodayWord;
-            mUpdateTodayWordHandler.sendMessage(message);
-            mTodayProgressBar.setVisibility(View.GONE);
+    @Override
+    public void onTurn() {
+        ToastUtils.showShort("刷新...");
+        onRefresh(false);
+    }
+
+    /**
+     * on change one button click.
+     *
+     * @param view
+     */
+    public void onChangeOneClick(View view) {
+        if (mChangeWordTimes > 0) {
+            mSharedpreference.updateWordId();
         }
+        onRefresh(true);
+        mChangeWordTimes--;
     }
 
     @Override

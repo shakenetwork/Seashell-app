@@ -63,7 +63,7 @@
                         android:textSize="13sp"
                         android:textColor="#57AF4E"
                         android:clickable="true"
-                        android:onClick="onRefreshClick"/>
+                        android:onClick="onChangeOneClick"/>
 
                     <TextView
                         android:id="@+id/use_times"
@@ -142,7 +142,7 @@
                 </FrameLayout>
 
                 <TextView
-                    android:id="@+id/user_des"
+                    android:id="@+id/tv_note"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/user_divider_layout"
@@ -152,6 +152,7 @@
                     android:singleLine="true"
                     android:ellipsize="marquee"
                     android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
                     android:text="@string/user_des"
                     android:textSize="12sp"
                     android:textColor="#B1B1B1"/>

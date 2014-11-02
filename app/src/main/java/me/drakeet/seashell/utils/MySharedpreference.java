@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import me.drakeet.seashell.R;
 import me.drakeet.seashell.model.Word;
 
 public class MySharedpreference {
@@ -21,6 +22,24 @@ public class MySharedpreference {
         sharedPreferences = context.getSharedPreferences(
                 "userinfo", Context.MODE_PRIVATE
         );
+    }
+
+    public int getCurrentWordId() {
+        return sharedPreferences.getInt(context.getString(R.string.current_word_id), 6);
+    }
+
+    public boolean updateWordId() {
+        int currentWordId = getCurrentWordId();
+        currentWordId++;
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(context.getString(R.string.current_word_id), currentWordId);
+        return editor.commit();
+    }
+
+    public boolean setCurrentWordId(int currentWordId) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(context.getString(R.string.current_word_id), currentWordId);
+        return editor.commit();
     }
 
     public boolean saveString(String key, String value) {

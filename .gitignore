@@ -34,3 +34,5 @@ build/
 
 # Mac system files
 .DS_Store
+
+*.keystore
