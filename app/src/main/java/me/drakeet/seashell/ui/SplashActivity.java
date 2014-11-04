@@ -18,6 +18,7 @@ import org.litepal.tablemanager.Connector;
 import me.drakeet.seashell.BuildConfig;
 import me.drakeet.seashell.R;
 import me.drakeet.seashell.api.Api;
+import me.drakeet.seashell.model.Version;
 import me.drakeet.seashell.utils.HttpDownloader;
 import me.drakeet.seashell.utils.TaskUtils;
 import me.drakeet.seashell.widget.PullScrollView;
@@ -48,11 +49,12 @@ public class SplashActivity extends Activity {
         TaskUtils.executeAsyncTask(
                 new AsyncTask<Object, Object, Object>() {
                     String note;
-
+                    Version version;
                     @Override
                     protected Object doInBackground(Object... params) {
                         HttpDownloader httpDownloader = new HttpDownloader();
                         note = httpDownloader.download(Api.GET_NOTE);
+                        //version = httpDownloader.download(Api.)
                         return null;
                     }
 

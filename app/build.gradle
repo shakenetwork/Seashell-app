@@ -12,19 +12,19 @@ android {
         versionName "1.4.0 Beta"
     }
 
-    signingConfigs {
-        app1 {
-            storeFile file("s.keystore")
-            storePassword sp
-            keyAlias kn
-            keyPassword kp
-        }
-    }
+//    signingConfigs {
+//        app1 {
+//            storeFile file("s.keystore")
+//            storePassword sp
+//            keyAlias kn
+//            keyPassword kp
+//        }
+//    }
 
     buildTypes {
-        release {
-            signingConfig signingConfigs.app1
-        }
+//        release {
+//            signingConfig signingConfigs.app1
+//        }
         productFlavors {
             defaultFlavor {
                 proguardFile 'proguard-rules.txt'
