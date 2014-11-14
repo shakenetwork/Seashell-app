@@ -33,6 +33,8 @@ import com.lurencun.cfuture09.androidkit.utils.ui.ExitDoubleClick;
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
 
+import org.litepal.crud.DataSupport;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -54,41 +56,41 @@ import me.drakeet.seashell.R;
  */
 public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnListener, View.OnClickListener, View.OnLongClickListener {
 
-    private static final String TAG  = MainActivity.class.getSimpleName();
-    public static final  String NOTE = "NOTE";
+    private static final String TAG = MainActivity.class.getSimpleName();
+    public static final String NOTE = "NOTE";
 
-    public static       boolean mIsPause  = false;
-    public static final int     YESTERDAY = 0, TODAY = 1;
+    public static boolean mIsPause = false;
+    public static final int YESTERDAY = 0, TODAY = 1;
 
     public static Handler mUpdateTodayWordHandler;
 
     public static Word mTodayWord;
     private static Word mYesterdayWord;
 
-    private TextView       mUseTimesTextView;
-    private Intent         serviceIntent;
-    private WordViewHoder  mYesterdayWordViewHoder;
-    private WordViewHoder  mTodayWordViewHoder;
+    private TextView mUseTimesTextView;
+    private Intent serviceIntent;
+    private WordViewHoder mYesterdayWordViewHoder;
+    private WordViewHoder mTodayWordViewHoder;
     private PullScrollView mScrollView;
-    private ImageView      mHeadImg;
-    private ViewPager      mMainViewPager;
+    private ImageView mHeadImg;
+    private ViewPager mMainViewPager;
     private PagerTitleStrip mPagerTitleStrip;
-    private ProgressBar    mYesterdayProgressBar;
-    private ProgressBar    mTodayProgressBar;
+    private ProgressBar mYesterdayProgressBar;
+    private ProgressBar mTodayProgressBar;
 
     private List<View> mViewList;
     private List<String> mTitleList;
 
-    private String           mTimesSting;
-    private String           mNoteString;
-    private boolean          mIsBound;
+    private String mTimesSting;
+    private String mNoteString;
+    private boolean mIsBound;
     private NotificatService.LocalBinder mLocalBinder;
     private NotificatService mNotificatService;
 
     private TextView mUserNameTextView;
-    private String   mUserName;
+    private String mUserName;
     private MySharedpreference mSharedpreference;
-    private View     mWordView;
+    private View mWordView;
 
     private int mChangeWordTimes = 3;
 
@@ -307,7 +309,6 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
      * init the ViewHoder
      *
      * @param view the View that contain Word views.
-     *
      * @return WordViewHoder
      */
     private WordViewHoder getView(View view) {
@@ -379,11 +380,24 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
 
     @Override
     public boolean onLongClick(View v) {
+        Word word = null;
+        String tag = (String) v.getTag();
+        if (tag.equals("today")) {
+            word = mTodayWord;
+        } else if (tag.equals("yesterday")) {
+            word = mYesterdayWord;
+        }
+        // 判断word是否收藏
+        List<FavoriteWord> words = DataSupport.where("word = ?", word.getWord()).find(FavoriteWord.class);
+        if (!words.isEmpty()) {
+            ToastUtils.showShort("已在我的收藏，请不要重复添加");
+            return true;
+        }
+
         final MaterialDialog materialDialog = new MaterialDialog(this);
         materialDialog.setTitle("加入收藏?");
         materialDialog.setMessage("点击确定可把此单词加入『我的收藏』");
 
-        String tag = (String) v.getTag();
         if (tag.equals("today")) {
             materialDialog.setNegativeButton(
                     "取消",
@@ -399,10 +413,7 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ToastUtils.showShort("已加入收藏");
-                            materialDialog.dismiss();
-                            FavoriteWord favoriteWord = new FavoriteWord(mTodayWord);
-                            favoriteWord.save();
+                            saveWord(materialDialog, mTodayWord);
                         }
                     }
             );
@@ -422,16 +433,21 @@ public class MainActivity extends MyMenuDrawer implements PullScrollView.OnTurnL
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ToastUtils.showShort("已加入收藏");
-                            materialDialog.dismiss();
-                            FavoriteWord favoriteWord = new FavoriteWord(mYesterdayWord);
-                            favoriteWord.save();
+                            saveWord(materialDialog, mYesterdayWord);
                         }
                     }
             );
             materialDialog.show();
         }
         return false;
+    }
+
+    // 收藏单词
+    private void saveWord(MaterialDialog materialDialog, Word word) {
+        ToastUtils.showShort("已加入收藏");
+        materialDialog.dismiss();
+        FavoriteWord favoriteWord = new FavoriteWord(word);
+        favoriteWord.save();
     }
 
 
