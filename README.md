@@ -1,3 +1,6 @@
+贝壳单词下载：
+<img src="http://www.tuili.com/blog/UploadFiles/2015-1/10919559348.png" width="256" height="256">
+
 ## 最新更新内容：
 1. 修复 刷新问题，并新增下拉刷新；
 2. 修复 一些小纰漏；
